@@ -1,5 +1,6 @@
 import {
   ConflictException,
+  ForbiddenException,
   HttpStatus,
   NotFoundException,
   UnprocessableEntityException
@@ -30,7 +31,6 @@ const handleError = (res: Response, err: Error) => {
         httpResponses.USER_NOT_EXISTS
       );
     }
-
     if (err.message === httpResponses.PRODUCT_NOT_EXISTS.message) {
       response = buildResponse(
         res,
@@ -38,11 +38,24 @@ const handleError = (res: Response, err: Error) => {
         httpResponses.PRODUCT_NOT_EXISTS
       );
     }
+    if (err.message === httpResponses.ORDER_NOT_EXISTS.message) {
+      response = buildResponse(
+        res,
+        HttpStatus.NOT_FOUND,
+        httpResponses.ORDER_NOT_EXISTS
+      );
+    }
   } else if (err instanceof UnprocessableEntityException) {
     response = buildResponse(
       res,
       HttpStatus.UNPROCESSABLE_ENTITY,
       httpResponses.INVALID_PASSWORD
+    );
+  } else if (err instanceof ForbiddenException) {
+    response = buildResponse(
+      res,
+      HttpStatus.FORBIDDEN,
+      httpResponses.FORBIDDEN
     );
   } else {
     response = buildResponse(
