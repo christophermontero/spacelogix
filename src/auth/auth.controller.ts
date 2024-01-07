@@ -1,18 +1,23 @@
 import {
   Body,
   Controller,
+  Get,
   HttpStatus,
   Logger,
   Post,
-  Res
+  Res,
+  UseGuards
 } from '@nestjs/common';
 import { Response } from 'express';
 import * as _ from 'lodash';
+import { User } from 'src/users/interface/user.interface';
 import buildPayloadResponse from 'src/utils/buildResponsePayload';
 import handleError from 'src/utils/handleError';
 import httpResponses from 'src/utils/responses';
 import { AuthService } from './auth.service';
+import { GetUser } from './decorator';
 import { SigninDto, SignupDto } from './dto';
+import { JwtGuard } from './guard';
 
 @Controller('api/v1/auth')
 export class AuthController {
@@ -50,5 +55,36 @@ export class AuthController {
       this.logger.error(error.message, 'Auth controller :: signin');
       return handleError(res, error);
     }
+  }
+
+  @UseGuards(JwtGuard)
+  @Get('signout')
+  async signout(@GetUser() user: User, @Res() res: Response) {
+    const protectedUser = this.protectUser(user);
+    this.logger.debug(protectedUser, 'User controller :: signout');
+    try {
+      await this.authService.signout(user.email);
+      return res
+        .status(HttpStatus.OK)
+        .json(buildPayloadResponse(httpResponses.OK, { user: protectedUser }));
+    } catch (error) {
+      this.logger.error(error.message, 'Auth controller :: signout');
+      return handleError(res, error);
+    }
+  }
+
+  private protectUser(user: unknown) {
+    return _.pick(
+      user,
+      '_id',
+      'name',
+      'email',
+      'phone',
+      'country',
+      'city',
+      'address',
+      'role',
+      'updatedAt'
+    );
   }
 }

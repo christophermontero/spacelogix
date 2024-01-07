@@ -60,7 +60,17 @@ export class AuthService {
     return this.signToken(user.id, user.email, user.role);
   }
 
-  async signToken(userId: number, email: string, role: UserRole) {
+  async signout(email: string) {
+    return await this.userModel.findOneAndUpdate(
+      { email },
+      {
+        updatedAt: new Date()
+      },
+      { new: true }
+    );
+  }
+
+  private async signToken(userId: number, email: string, role: UserRole) {
     const payload = {
       sub: userId,
       email,

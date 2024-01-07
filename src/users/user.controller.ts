@@ -9,6 +9,7 @@ import {
   UseGuards
 } from '@nestjs/common';
 import { Response } from 'express';
+import * as _ from 'lodash';
 import buildPayloadResponse from 'src/utils/buildResponsePayload';
 import handleError from 'src/utils/handleError';
 import httpResponses from 'src/utils/responses';
@@ -27,15 +28,7 @@ export class UserController {
 
   @Get('me')
   async profile(@GetUser() user: User, @Res() res: Response) {
-    const protectedUser = {
-      name: user.name,
-      email: user.email,
-      phone: user.phone,
-      country: user.country,
-      city: user.city,
-      address: user.address,
-      role: user.role
-    };
+    const protectedUser = this.protectUser(user);
     this.logger.debug(protectedUser, 'User controller :: profile');
     return res
       .status(HttpStatus.OK)
@@ -59,5 +52,20 @@ export class UserController {
       this.logger.error(error.message, 'User controller :: update');
       return handleError(res, error);
     }
+  }
+
+  private protectUser(user: unknown) {
+    return _.pick(
+      user,
+      '_id',
+      'name',
+      'email',
+      'phone',
+      'country',
+      'city',
+      'address',
+      'role',
+      'updatedAt'
+    );
   }
 }
