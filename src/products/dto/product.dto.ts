@@ -1,11 +1,13 @@
 import { Type } from 'class-transformer';
 import {
+  IsEnum,
   IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
   ValidateNested
 } from 'class-validator';
+import { Currency } from '../interface/product.interface';
 
 export class SupplierDto {
   @IsString()
@@ -46,6 +48,10 @@ export class ProductDto {
   @IsNotEmpty()
   price: number;
 
+  @IsEnum(Currency)
+  @IsNotEmpty()
+  currency: Currency;
+
   @IsNumber()
   @IsNotEmpty()
   stock: number;
@@ -68,6 +74,10 @@ export class EditProductDto {
   @IsNumber()
   @IsOptional()
   price: number;
+
+  @IsOptional()
+  @IsEnum(Currency)
+  currency: Currency;
 
   @IsNumber()
   @IsOptional()

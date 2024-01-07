@@ -71,6 +71,9 @@ export class ProductService {
       if (dto.price) {
         product.price = dto.price;
       }
+      if (dto.currency) {
+        product.currency = dto.currency;
+      }
       if (dto.stock) {
         product.stock = dto.stock;
       }

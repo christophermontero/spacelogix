@@ -17,14 +17,12 @@ export class SignupDto {
   @IsNotEmpty()
   email: string;
 
-  @IsString()
-  @IsNotEmpty()
   @IsValidPassword()
+  @IsNotEmpty()
   password: string;
 
-  @IsString()
-  @IsNotEmpty()
   @IsEnum(UserRole)
+  @IsNotEmpty()
   role: UserRole;
 
   @IsString()
@@ -49,13 +47,11 @@ export class SigninDto {
   @IsNotEmpty()
   email: string;
 
-  @IsString()
-  @IsNotEmpty()
   @IsValidPassword()
+  @IsNotEmpty()
   password: string;
 
-  @IsString()
-  @IsNotEmpty()
   @IsEnum(UserRole)
+  @IsNotEmpty()
   role: UserRole;
 }

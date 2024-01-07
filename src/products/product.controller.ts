@@ -189,6 +189,7 @@ export class ProductController {
       'name',
       'description',
       'price',
+      'currency',
       'stock',
       'supplier'
     );
