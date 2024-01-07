@@ -10,7 +10,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcrypt';
 import * as _ from 'lodash';
 import { Model } from 'mongoose';
-import { User, UserRole } from 'src/user/interface/user.interface';
+import { User, UserRole } from 'src/users/interface/user.interface';
 import httpResponses from 'src/utils/responses';
 import { SigninDto, SignupDto } from './dto';
 

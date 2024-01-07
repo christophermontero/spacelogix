@@ -11,6 +11,10 @@ const httpResponses = {
     code: 'UNAUTHORIZED',
     message: 'Token is invalid'
   },
+  FORBIDDEN: {
+    code: 'FORBIDDEN',
+    message: 'User has invalid role'
+  },
   USER_TAKEN: {
     code: 'USER_TAKEN',
     message: 'User already exists'
