@@ -1,9 +1,3 @@
-# NestJs REST API tutorial for FreeCodeCamp
+# SpaceLogix
 
-
-### Run the API in development mode
-```javascript
-yarn // install
-yarn db:dev:restart // start postgres in docker and push migrations
-yarn start:dev // start api in dev mode
-```
+SpaceLogix is a cutting-edge logistics system that specializes in managing and optimizing space-related operations with the power of RESTful APIs.
