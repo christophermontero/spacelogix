@@ -11,7 +11,7 @@ import { UserModule } from './user/user.module';
     }),
     AuthModule,
     UserModule,
-    MongooseModule.forRoot('mongodb://localhost:27017/spaceshipperdb')
+    MongooseModule.forRoot('mongodb://localhost:27017/spacelogixdb')
   ]
 })
 export class AppModule {}
