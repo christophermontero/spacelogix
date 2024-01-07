@@ -6,7 +6,7 @@ export enum UserRole {
   Transporter = 'transporter'
 }
 
-export interface Users extends Document {
+export interface User extends Document {
   readonly name: string;
   readonly email: string;
   readonly hashedPassword: string;

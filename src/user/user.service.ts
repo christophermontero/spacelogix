@@ -3,13 +3,13 @@ import { InjectModel } from '@nestjs/mongoose';
 import * as _ from 'lodash';
 import { Model } from 'mongoose';
 import { EditUserDto } from './dto';
-import { Users } from './interface/users.interface';
+import { User } from './interface/user.interface';
 
 @Injectable()
 export class UserService {
   private readonly logger = new Logger();
 
-  constructor(@InjectModel('User') private readonly userModel: Model<Users>) {}
+  constructor(@InjectModel('User') private readonly userModel: Model<User>) {}
 
   async update(userId: number, dto: EditUserDto) {
     try {

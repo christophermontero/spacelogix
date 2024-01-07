@@ -10,14 +10,14 @@ import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcrypt';
 import * as _ from 'lodash';
 import { Model } from 'mongoose';
-import { UserRole, Users } from 'src/user/interface/users.interface';
+import { User, UserRole } from 'src/user/interface/user.interface';
 import httpResponses from 'src/utils/responses';
 import { SigninDto, SignupDto } from './dto';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectModel('User') private readonly userModel: Model<Users>,
+    @InjectModel('User') private readonly userModel: Model<User>,
     private jwt: JwtService,
     private config: ConfigService
   ) {}
@@ -32,7 +32,7 @@ export class AuthService {
 
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(dto.password, salt);
-      const userDto: Partial<Users> = {
+      const userDto: Partial<User> = {
         ...dto,
         hashedPassword
       };

@@ -15,7 +15,7 @@ import httpResponses from 'src/utils/responses';
 import { GetUser } from '../auth/decorator';
 import { JwtGuard } from '../auth/guard';
 import { EditUserDto } from './dto';
-import { Users } from './interface/users.interface';
+import { User } from './interface/user.interface';
 import { UserService } from './user.service';
 
 @UseGuards(JwtGuard)
@@ -26,7 +26,7 @@ export class UserController {
   constructor(private userService: UserService) {}
 
   @Get('me')
-  async profile(@GetUser() user: Users, @Res() res: Response) {
+  async profile(@GetUser() user: User, @Res() res: Response) {
     const protectedUser = {
       name: user.name,
       email: user.email,
