@@ -1,0 +1,141 @@
+import { Type } from 'class-transformer';
+import {
+  IsArray,
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Length,
+  ValidateNested
+} from 'class-validator';
+import { Currency, PaymentMethod } from '../interface/order.interface';
+
+class BillingAddressDto {
+  @IsString()
+  @IsNotEmpty()
+  country: string;
+
+  @IsString()
+  @IsNotEmpty()
+  city: string;
+
+  @IsString()
+  @IsNotEmpty()
+  address: string;
+
+  @IsString()
+  @IsOptional()
+  zipCode: string;
+}
+
+class CustomerDto {
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
+
+  @IsString()
+  @IsNotEmpty()
+  phone: string;
+
+  @IsString()
+  @IsNotEmpty()
+  country: string;
+
+  @IsString()
+  @IsNotEmpty()
+  address: string;
+
+  @IsString()
+  @IsNotEmpty()
+  city: string;
+}
+
+class TransporterDto {
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
+
+  @IsString()
+  @IsNotEmpty()
+  phone: string;
+
+  @IsString()
+  @IsNotEmpty()
+  country: string;
+
+  @IsString()
+  @IsNotEmpty()
+  city: string;
+
+  @IsString()
+  @IsNotEmpty()
+  address: string;
+}
+
+class PaymentDto {
+  @IsString()
+  @IsNotEmpty()
+  @IsEnum(PaymentMethod)
+  paymentMethod: PaymentMethod;
+
+  @IsString()
+  @IsOptional()
+  cardNumber: string;
+
+  @IsString()
+  @IsOptional()
+  expirationDate: string;
+
+  @IsString()
+  @IsOptional()
+  cvv: string;
+
+  @ValidateNested()
+  @Type(() => BillingAddressDto)
+  billingAddress: BillingAddressDto;
+
+  @IsNumber()
+  @IsNotEmpty()
+  totalAmount: number;
+
+  @IsString()
+  @IsNotEmpty()
+  @IsEnum(Currency)
+  currency: Currency;
+}
+
+export class ProductOrderDto {
+  @IsString()
+  @IsNotEmpty()
+  id: string;
+}
+
+export class OrderDto {
+  @IsArray()
+  @Length(1, 15)
+  @ValidateNested({ each: true })
+  @Type(() => ProductOrderDto)
+  products: ProductOrderDto[];
+
+  @ValidateNested()
+  @Type(() => CustomerDto)
+  customer: CustomerDto;
+
+  @ValidateNested()
+  @Type(() => TransporterDto)
+  transporter: TransporterDto;
+
+  @ValidateNested()
+  @Type(() => PaymentDto)
+  payment: PaymentDto;
+}
