@@ -46,12 +46,8 @@ interface Payment {
   currency: string;
 }
 
-interface ProductOrder {
-  productId: Types.ObjectId;
-}
-
 export interface Order extends Document {
-  products: ProductOrder[];
+  products: Types.ObjectId[];
   customer: Customer;
   transporter: Transporter;
   payment: Payment;

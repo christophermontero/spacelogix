@@ -7,7 +7,6 @@ import {
   IsNumber,
   IsOptional,
   IsString,
-  Length,
   ValidateNested
 } from 'class-validator';
 import { Currency, PaymentMethod } from '../interface/order.interface';
@@ -114,21 +113,13 @@ class PaymentDto {
   currency: Currency;
 }
 
-export class ProductOrderDto {
-  @IsString()
-  @IsNotEmpty()
-  id: string;
-}
-
 export class OrderDto {
   @IsArray()
-  @Length(1, 15)
-  @ValidateNested({ each: true })
-  @Type(() => ProductOrderDto)
-  products: ProductOrderDto[];
+  products: string[];
 
   @ValidateNested()
   @Type(() => CustomerDto)
+  @IsOptional()
   customer: CustomerDto;
 
   @ValidateNested()

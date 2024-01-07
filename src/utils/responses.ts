@@ -27,6 +27,10 @@ const httpResponses = {
     code: 'PRODUCT_NOT_EXISTS',
     message: 'Product not exists'
   },
+  ORDER_NOT_EXISTS: {
+    code: 'ORDER_NOT_EXISTS',
+    message: 'Order not exists'
+  },
   INVALID_PASSWORD: {
     code: 'INVALID_PASSWORD',
     message: 'Invalid password'

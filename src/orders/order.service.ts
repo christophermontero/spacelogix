@@ -2,7 +2,8 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { Product } from 'src/products/interface/product.interface';
-import { OrderDto, ProductOrderDto } from './dto';
+import { UserRole } from 'src/users/interface/user.interface';
+import { OrderDto } from './dto';
 import { Order } from './interface/order.interface';
 
 @Injectable()
@@ -16,43 +17,35 @@ export class OrderService {
 
   async create(dto: OrderDto) {
     try {
-      const products = await Promise.all(
-        dto.products.map((prod: ProductOrderDto) =>
-          this.productModel.findById(prod.id)
-        )
-      );
       const order = await new this.orderModel(dto);
       await order.save();
       return order;
     } catch (error) {
-      this.logger.error(error.message, 'Product service :: create');
+      this.logger.error(error.message, 'Order service :: create');
       throw error;
     }
   }
 
-  async fetchAllByRole(email: string) {
+  async fetchAllByRole(role: string, email: string) {
+    let criteria;
+    if (role === UserRole.Customer) {
+      criteria = { 'customer.email': email };
+    } else if (role === UserRole.Transporter) {
+      criteria = { 'transporter.email': email };
+    }
     try {
-      return await this.orderModel.find({ 'supplier.email': email });
+      return await this.orderModel.find(criteria);
     } catch (error) {
-      this.logger.error(error.message, 'Product service :: getAll');
+      this.logger.error(error.message, 'Order service :: getAll');
       throw error;
     }
   }
 
-  async fetchAll() {
+  async fetchById(orderId: Types.ObjectId) {
     try {
-      return await this.orderModel.find();
+      return await this.orderModel.findById(orderId);
     } catch (error) {
-      this.logger.error(error.message, 'Product service :: getAll');
-      throw error;
-    }
-  }
-
-  async fetchById(productId: Types.ObjectId) {
-    try {
-      return await this.orderModel.findById(productId);
-    } catch (error) {
-      this.logger.error(error.message, 'Product service :: getById');
+      this.logger.error(error.message, 'Order service :: getById');
       throw error;
     }
   }
@@ -64,7 +57,7 @@ export class OrderService {
         'customer.email': email
       });
     } catch (error) {
-      this.logger.error(error.message, 'Product service :: update');
+      this.logger.error(error.message, 'Order service :: update');
       throw error;
     }
   }

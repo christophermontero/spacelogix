@@ -25,7 +25,7 @@ import { OrderDto } from './dto';
 import { OrderService } from './order.service';
 
 @UseGuards(JwtGuard)
-@Controller('api/v1/products')
+@Controller('api/v1/orders')
 export class OrderController {
   private readonly logger = new Logger();
 
@@ -41,12 +41,20 @@ export class OrderController {
     if (user.role !== UserRole.Customer) {
       throw new ForbiddenException();
     }
+    dto.customer = {
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
+      country: user.country,
+      city: user.city,
+      address: user.address
+    };
     try {
-      const product = await this.orderService.create(dto);
-      const proctectedProduct = this.protectOrder(product);
+      const order = await this.orderService.create(dto);
+      const proctectedOrders = this.protectOrder(order);
       return res.status(HttpStatus.CREATED).json(
         buildPayloadResponse(httpResponses.CREATED, {
-          product: proctectedProduct
+          order: proctectedOrders
         })
       );
     } catch (error) {
@@ -58,19 +66,17 @@ export class OrderController {
   @Get()
   async get(@GetUser() user: User, @Res() res: Response) {
     this.logger.debug('Order controller :: get');
-    let products;
     try {
-      if (user.role === UserRole.Customer) {
-        products = await this.orderService.fetchAll();
-      } else {
-        products = await this.orderService.fetchAllByRole(user.email);
-      }
-      const proctectedProduct = products.map(
-        (prod) => (prod = this.protectOrder(prod))
+      const orders = await this.orderService.fetchAllByRole(
+        user.role,
+        user.email
+      );
+      const proctectedOrders = orders.map(
+        (order: unknown) => (order = this.protectOrder(order))
       );
       return res.status(HttpStatus.OK).json(
         buildPayloadResponse(httpResponses.OK, {
-          products: proctectedProduct
+          orders: proctectedOrders
         })
       );
     } catch (error) {
@@ -82,19 +88,19 @@ export class OrderController {
   @Get(':orderId')
   async getById(@Res() res: Response, @Param('orderId') orderId: string) {
     this.logger.debug('Order controller :: getById');
-    const objectIdProductId = new Types.ObjectId(orderId);
+    const objectIdOrderId = new Types.ObjectId(orderId);
     try {
-      const product = await this.orderService.fetchById(objectIdProductId);
+      const order = await this.orderService.fetchById(objectIdOrderId);
 
-      if (!product) {
-        throw new NotFoundException(httpResponses.PRODUCT_NOT_EXISTS.message);
+      if (!order) {
+        throw new NotFoundException(httpResponses.ORDER_NOT_EXISTS.message);
       }
 
-      const proctectedProduct = this.protectOrder(product);
+      const proctectedOrders = this.protectOrder(order);
       return res
         .status(HttpStatus.OK)
         .json(
-          buildPayloadResponse(httpResponses.OK, { product: proctectedProduct })
+          buildPayloadResponse(httpResponses.OK, { order: proctectedOrders })
         );
     } catch (error) {
       this.logger.error(error.message, 'Order controller :: getById');
@@ -112,22 +118,19 @@ export class OrderController {
     if (user.role !== UserRole.Customer) {
       throw new ForbiddenException();
     }
-    const objectIdProductId = new Types.ObjectId(orderId);
+    const objectIdOrderId = new Types.ObjectId(orderId);
     try {
-      const product = await this.orderService.remove(
-        objectIdProductId,
-        user.email
-      );
+      const order = await this.orderService.remove(objectIdOrderId, user.email);
 
-      if (!product) {
-        throw new NotFoundException(httpResponses.PRODUCT_NOT_EXISTS.message);
+      if (!order) {
+        throw new NotFoundException(httpResponses.ORDER_NOT_EXISTS.message);
       }
 
-      const proctectedProduct = this.protectOrder(product);
+      const proctectedOrders = this.protectOrder(order);
       return res
         .status(HttpStatus.OK)
         .json(
-          buildPayloadResponse(httpResponses.OK, { product: proctectedProduct })
+          buildPayloadResponse(httpResponses.OK, { order: proctectedOrders })
         );
     } catch (error) {
       this.logger.error(error.message, 'Order controller :: remove');
@@ -135,16 +138,15 @@ export class OrderController {
     }
   }
 
-  private protectOrder(product: unknown) {
+  private protectOrder(order: unknown) {
     return _.pick(
-      product,
+      order,
       '_id',
-      'name',
-      'description',
-      'price',
-      'currency',
-      'stock',
-      'supplier'
+      'orders',
+      'customer',
+      'transporter',
+      'payment',
+      'createdAt'
     );
   }
 }
