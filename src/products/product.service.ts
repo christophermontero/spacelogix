@@ -1,6 +1,7 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
+import httpResponses from 'src/utils/responses';
 import { EditProductDto, ProductDto } from './dto';
 import { Product } from './interface/product.interface';
 
@@ -23,6 +24,15 @@ export class ProductService {
     }
   }
 
+  async fetchAllByRole(email: string) {
+    try {
+      return await this.productModel.find({ 'supplier.email': email });
+    } catch (error) {
+      this.logger.error(error.message, 'Product service :: getAll');
+      throw error;
+    }
+  }
+
   async fetchAll() {
     try {
       return await this.productModel.find();
@@ -32,7 +42,7 @@ export class ProductService {
     }
   }
 
-  async getById(productId: Types.ObjectId) {
+  async fetchById(productId: Types.ObjectId) {
     try {
       return await this.productModel.findById(productId);
     } catch (error) {
@@ -41,27 +51,43 @@ export class ProductService {
     }
   }
 
-  async update(productId: Types.ObjectId, dto: EditProductDto) {
+  async update(productId: Types.ObjectId, email: string, dto: EditProductDto) {
     try {
-      return await this.productModel.findByIdAndUpdate(
-        productId,
-        {
-          ...(dto.name && { name: dto.name }),
-          ...(dto.description && { name: dto.description }),
-          ...(dto.price && { name: dto.price }),
-          ...(dto.stock && { name: dto.stock })
-        },
-        { new: true }
-      );
+      const product = await this.productModel.findOne({
+        _id: productId,
+        'supplier.email': email
+      });
+
+      if (!product) {
+        throw new NotFoundException(httpResponses.PRODUCT_NOT_EXISTS.message);
+      }
+
+      if (dto.name) {
+        product.name = dto.name;
+      }
+      if (dto.description) {
+        product.description = dto.description;
+      }
+      if (dto.price) {
+        product.price = dto.price;
+      }
+      if (dto.stock) {
+        product.stock = dto.stock;
+      }
+
+      return await product.save();
     } catch (error) {
       this.logger.error(error.message, 'Product service :: update');
       throw error;
     }
   }
 
-  async remove(productId: Types.ObjectId) {
+  async remove(productId: Types.ObjectId, email: string) {
     try {
-      return await this.productModel.findByIdAndDelete(productId);
+      return await this.productModel.findOneAndDelete({
+        _id: productId,
+        'supplier.email': email
+      });
     } catch (error) {
       this.logger.error(error.message, 'Product service :: update');
       throw error;

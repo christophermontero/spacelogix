@@ -16,6 +16,6 @@ const ProductSchema = new mongoose.Schema({
 });
 
 // Define index on supplier.email
-ProductSchema.index({ 'supplier.email': 1 }, { unique: true });
+ProductSchema.index({ 'supplier.email': 1 });
 
 export default ProductSchema;
