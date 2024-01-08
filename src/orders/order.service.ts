@@ -66,10 +66,11 @@ export class OrderService {
     }
   }
 
-  async remove(orderId: Types.ObjectId, email: string) {
+  async remove(orderId: string, email: string) {
+    const objectIdOrderId = new Types.ObjectId(orderId);
     try {
       return await this.orderModel.findOneAndDelete({
-        _id: orderId,
+        _id: objectIdOrderId,
         'customer.email': email
       });
     } catch (error) {

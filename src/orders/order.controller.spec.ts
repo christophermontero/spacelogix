@@ -1,4 +1,5 @@
 import {
+  ForbiddenException,
   HttpStatus,
   NotFoundException,
   UnprocessableEntityException
@@ -20,6 +21,7 @@ describe('OrderController', () => {
   let productService: ProductService;
   let user: Partial<User>;
   let dto: Partial<OrderDto>;
+  let orderId: string;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -44,8 +46,6 @@ describe('OrderController', () => {
     user = {
       name: 'John Doe',
       email: 'johndoe@mailinator.com',
-      hashedPassword:
-        '$2b$10$R0VOrr7DALhGgl8LBeL1iO0UE.pEzl9.r8eg632vi2jYlvp.VU5ci',
       phone: '98765432',
       address: 'Fake St. 123',
       city: 'John Doe City',
@@ -55,6 +55,7 @@ describe('OrderController', () => {
     dto = {
       products: ['659b50aabd8aa10100e284fb']
     };
+    orderId = 'orderId';
   });
 
   describe('create', () => {
@@ -74,34 +75,42 @@ describe('OrderController', () => {
           country: 'Supplier1 Country'
         }
       });
-
       orderService.create = jest.fn();
-
       const res: Partial<Response> = {
         status: jest.fn().mockReturnThis(),
         json: jest.fn().mockReturnThis()
       };
-
       const result = await orderController.create(
         user as User,
         res as Response,
         dto as OrderDto
       );
-
       expect(orderService.create).toHaveBeenCalledWith(dto);
       expect(result.status).toHaveBeenCalledWith(HttpStatus.CREATED);
+    });
+
+    it('should throw ForbiddenException if role is invalid', async () => {
+      user = { role: UserRole.Supplier };
+      const res: Partial<Response> = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn().mockReturnThis()
+      };
+      try {
+        await orderController.remove(user as User, res as Response, orderId);
+      } catch (error) {
+        expect(error).toBeInstanceOf(ForbiddenException);
+        expect(error.message).toBe(httpResponses.FORBIDDEN.message);
+      }
     });
 
     it('should throw UnprocessableEntityException if too many products are provided', async () => {
       dto = {
         products: new Array(16).fill('productId')
       };
-
       const res: Partial<Response> = {
         status: jest.fn().mockReturnThis(),
         json: jest.fn().mockReturnThis()
       };
-
       try {
         await orderController.create(
           user as User,
@@ -116,12 +125,10 @@ describe('OrderController', () => {
 
     it('should throw NotFoundException if some products are missing', async () => {
       productService.fetchById = jest.fn().mockReturnValue(null);
-
       const res: Partial<Response> = {
         status: jest.fn().mockReturnThis(),
         json: jest.fn().mockReturnThis()
       };
-
       try {
         await orderController.create(
           user as User,
@@ -131,6 +138,94 @@ describe('OrderController', () => {
       } catch (error) {
         expect(error).toBeInstanceOf(NotFoundException);
         expect(error.message).toBe(httpResponses.MISSING_PRODUCTS.message);
+      }
+    });
+  });
+
+  describe('get', () => {
+    it('should get all orders for a customer', async () => {
+      orderService.fetchAllByRole = jest.fn().mockResolvedValue([{}]);
+      const res: Partial<Response> = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn().mockReturnThis()
+      };
+      const result = await orderController.get(user as User, res as Response);
+      expect(orderService.fetchAllByRole).toHaveBeenCalledWith(
+        user.role,
+        user.email
+      );
+      expect(result.status).toHaveBeenCalledWith(HttpStatus.OK);
+    });
+  });
+
+  describe('getById', () => {
+    it('should create an order for a customer', async () => {
+      orderService.fetchById = jest.fn().mockResolvedValue({});
+      const res: Partial<Response> = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn().mockReturnThis()
+      };
+      const result = await orderController.getById(res as Response, orderId);
+      expect(orderService.fetchById).toHaveBeenCalledWith(orderId);
+      expect(result.status).toHaveBeenCalledWith(HttpStatus.OK);
+    });
+
+    it('should throw UnprocessableEntityException if too many products are provided', async () => {
+      orderService.fetchById = jest.fn().mockResolvedValue(null);
+      const res: Partial<Response> = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn().mockReturnThis()
+      };
+      try {
+        await orderController.getById(res as Response, orderId);
+      } catch (error) {
+        expect(error).toBeInstanceOf(NotFoundException);
+        expect(error.message).toBe(httpResponses.ORDER_NOT_EXISTS.message);
+      }
+    });
+  });
+
+  describe('remove', () => {
+    it('should remove an order for a customer', async () => {
+      orderService.remove = jest.fn().mockResolvedValue({});
+      const res: Partial<Response> = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn().mockReturnThis()
+      };
+      const result = await orderController.remove(
+        user as User,
+        res as Response,
+        orderId
+      );
+      expect(orderService.remove).toHaveBeenCalledWith(orderId, user.email);
+      expect(result.status).toHaveBeenCalledWith(HttpStatus.OK);
+    });
+
+    it('should throw ForbiddenException if role is invalid', async () => {
+      user = { role: UserRole.Supplier };
+      const res: Partial<Response> = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn().mockReturnThis()
+      };
+      try {
+        await orderController.remove(user as User, res as Response, orderId);
+      } catch (error) {
+        expect(error).toBeInstanceOf(ForbiddenException);
+        expect(error.message).toBe(httpResponses.FORBIDDEN.message);
+      }
+    });
+
+    it('should throw NotFoundException if order does not exist', async () => {
+      orderService.remove = jest.fn().mockResolvedValue(null);
+      const res: Partial<Response> = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn().mockReturnThis()
+      };
+      try {
+        await orderController.remove(user as User, res as Response, orderId);
+      } catch (error) {
+        expect(error).toBeInstanceOf(NotFoundException);
+        expect(error.message).toBe(httpResponses.ORDER_NOT_EXISTS.message);
       }
     });
   });

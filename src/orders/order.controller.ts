@@ -15,7 +15,6 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import * as _ from 'lodash';
-import { Types } from 'mongoose';
 import { GetUser } from '../auth/decorator';
 import { JwtGuard } from '../auth/guard';
 import { ProductService } from '../products/product.service';
@@ -135,11 +134,10 @@ export class OrderController {
   ) {
     this.logger.debug('Order controller :: remove');
     if (user.role !== UserRole.Customer) {
-      throw new ForbiddenException();
+      throw new ForbiddenException(httpResponses.FORBIDDEN.message);
     }
-    const objectIdOrderId = new Types.ObjectId(orderId);
     try {
-      const order = await this.orderService.remove(objectIdOrderId, user.email);
+      const order = await this.orderService.remove(orderId, user.email);
 
       if (!order) {
         throw new NotFoundException(httpResponses.ORDER_NOT_EXISTS.message);
