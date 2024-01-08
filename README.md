@@ -5,7 +5,7 @@
 - [Requirements](#requirements)
 - [User guide](#user-guide)
   - [Endpoints](#endpoints)
-  - [MongoDB document schemas](#mongodb-documents-schemas)
+  - [MongoDB document schemas](#mongoDB-document-schemas)
 - [Install guide](#install-guide)
   - [Containers](#containers)
 - [Comments](#comments)
