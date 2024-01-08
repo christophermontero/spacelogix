@@ -39,7 +39,12 @@ export class OrderService {
       throw new ForbiddenException(httpResponses.FORBIDDEN.message);
     }
     try {
-      return await this.orderModel.find(criteria);
+      return await this.orderModel
+        .find(criteria)
+        .populate(
+          'products',
+          '_id name description price currency stock supplier'
+        );
     } catch (error) {
       this.logger.error(error.message, 'Order service :: getAll');
       throw error;
@@ -49,7 +54,12 @@ export class OrderService {
   async fetchById(orderId: string) {
     const objectIdOrderId = new Types.ObjectId(orderId);
     try {
-      return await this.orderModel.findById(objectIdOrderId);
+      return await this.orderModel
+        .findById(objectIdOrderId)
+        .populate(
+          'products',
+          '_id name description price currency stock supplier'
+        );
     } catch (error) {
       this.logger.error(error.message, 'Order service :: getById');
       throw error;

@@ -161,6 +161,7 @@ export class OrderController {
     return _.pick(
       order,
       '_id',
+      'products',
       'orders',
       'customer',
       'transporter',
