@@ -1,0 +1,34 @@
+# Git
+
+.git/
+.github/
+node_modules/
+package-lock.json
+.husky/
+
+# Prod
+
+dist/
+
+# Set up
+
+.env.example
+.gitignore
+.prettierrc
+.eslintrc.js
+
+# Project description
+
+LICENSE
+README.md
+
+# Tests
+
+test/
+
+# Docker
+
+Dockerfile
+docker-compose.dev.yml
+docker-compose.prod.yml
+docker-compose.yml

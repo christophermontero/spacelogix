@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  spacelogix:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: spacelogix
+    depends_on:
+      - mongodb
+    ports:
+      - '3000:3000'
+    volumes:
+      - .:/logixdb
+    networks:
+      - logixnetwork
+  mongodb:
+    image: mongo:4.2.1-bionic
+    ports:
+      - '27017:27017'
+    volumes:
+      - logixdb:/data/db
+    networks:
+      - logixnetwork
+
+volumes:
+  logixdb:
+
+networks:
+  logixnetwork:
