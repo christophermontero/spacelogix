@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import * as _ from 'lodash';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { EditUserDto } from './dto';
 import { User } from './interface/user.interface';
 
@@ -11,10 +11,11 @@ export class UserService {
 
   constructor(@InjectModel('User') private readonly userModel: Model<User>) {}
 
-  async update(userId: number, dto: EditUserDto) {
+  async update(userId: string, dto: EditUserDto) {
+    const objectIdUserId = new Types.ObjectId(userId);
     try {
-      const user = await this.userModel.findOneAndUpdate(
-        { id: userId },
+      const user = await this.userModel.findByIdAndUpdate(
+        objectIdUserId,
         {
           ...(dto.name && { name: dto.name }),
           ...(dto.phone && { name: dto.phone }),
