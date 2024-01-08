@@ -45,6 +45,13 @@ const handleError = (res: Response, err: Error) => {
         httpResponses.ORDER_NOT_EXISTS
       );
     }
+    if (err.message === httpResponses.MISSING_PRODUCTS.message) {
+      response = buildResponse(
+        res,
+        HttpStatus.NOT_FOUND,
+        httpResponses.MISSING_PRODUCTS
+      );
+    }
   } else if (err instanceof UnprocessableEntityException) {
     if (err.message === httpResponses.INVALID_PASSWORD.message) {
       response = buildResponse(

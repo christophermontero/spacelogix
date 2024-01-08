@@ -46,9 +46,10 @@ export class OrderService {
     }
   }
 
-  async fetchById(orderId: Types.ObjectId) {
+  async fetchById(orderId: string) {
+    const objectIdOrderId = new Types.ObjectId(orderId);
     try {
-      return await this.orderModel.findById(orderId);
+      return await this.orderModel.findById(objectIdOrderId);
     } catch (error) {
       this.logger.error(error.message, 'Order service :: getById');
       throw error;

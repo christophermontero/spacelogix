@@ -44,37 +44,39 @@ export class OrderController {
   ) {
     this.logger.debug(dto, 'Order controller :: create');
 
-    if (dto.products.length > 15) {
-      throw new UnprocessableEntityException(
-        httpResponses.TOO_MANY_PRODUCTS.message
-      );
-    }
-
     if (user.role !== UserRole.Customer) {
       throw new ForbiddenException();
     }
-
-    dto.customer = {
-      name: user.name,
-      email: user.email,
-      phone: user.phone,
-      country: user.country,
-      city: user.city,
-      address: user.address
-    };
     try {
-      await Promise.all(
-        dto.products.map((product: string) =>
-          this.productService.fetchById(new Types.ObjectId(product))
+      if (dto.products.length > 15) {
+        throw new UnprocessableEntityException(
+          httpResponses.TOO_MANY_PRODUCTS.message
+        );
+      }
+
+      dto.customer = {
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        country: user.country,
+        city: user.city,
+        address: user.address
+      };
+
+      const missingProducts = await Promise.all(
+        dto.products.map((prodId: string) =>
+          this.productService.fetchById(prodId)
         )
-      );
-      const order = await this.orderService.create(dto);
-      const proctectedOrders = this.protectOrder(order);
-      return res.status(HttpStatus.CREATED).json(
-        buildPayloadResponse(httpResponses.CREATED, {
-          order: proctectedOrders
-        })
-      );
+      ).then((products) => products.some((prod) => _.isNull(prod)));
+
+      if (missingProducts) {
+        throw new NotFoundException(httpResponses.MISSING_PRODUCTS);
+      }
+
+      await this.orderService.create(dto);
+      return res
+        .status(HttpStatus.CREATED)
+        .json(buildPayloadResponse(httpResponses.CREATED));
     } catch (error) {
       this.logger.error(error.message, 'Order controller :: create');
       return handleError(res, error);
@@ -106,9 +108,8 @@ export class OrderController {
   @Get(':orderId')
   async getById(@Res() res: Response, @Param('orderId') orderId: string) {
     this.logger.debug('Order controller :: getById');
-    const objectIdOrderId = new Types.ObjectId(orderId);
     try {
-      const order = await this.orderService.fetchById(objectIdOrderId);
+      const order = await this.orderService.fetchById(orderId);
 
       if (!order) {
         throw new NotFoundException(httpResponses.ORDER_NOT_EXISTS.message);

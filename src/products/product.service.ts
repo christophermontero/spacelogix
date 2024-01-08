@@ -42,9 +42,10 @@ export class ProductService {
     }
   }
 
-  async fetchById(productId: Types.ObjectId) {
+  async fetchById(productId: string) {
+    const objectIdProductId = new Types.ObjectId(productId);
     try {
-      return await this.productModel.findById(productId);
+      return await this.productModel.findById(objectIdProductId);
     } catch (error) {
       this.logger.error(error.message, 'Product service :: getById');
       throw error;

@@ -94,9 +94,8 @@ export class ProductController {
   @Get(':productId')
   async getById(@Res() res: Response, @Param('productId') productId: string) {
     this.logger.debug('Product controller :: getById');
-    const objectIdProductId = new Types.ObjectId(productId);
     try {
-      const product = await this.productService.fetchById(objectIdProductId);
+      const product = await this.productService.fetchById(productId);
 
       if (!product) {
         throw new NotFoundException(httpResponses.PRODUCT_NOT_EXISTS.message);
