@@ -2,7 +2,7 @@
 
 - [Project description](#project-description)
   - [Features](#features)
-- [Requirements](#requeriments)
+- [Requirements](#requirements)
 - [User guide](#user-guide)
   - [Endpoints](#endpoints)
   - [MongoDB document schemas](#mongodb-documents-schemas)
