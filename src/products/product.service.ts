@@ -14,6 +14,7 @@ export class ProductService {
   ) {}
 
   async create(dto: ProductDto) {
+    this.logger.debug(dto, 'Product service :: create');
     try {
       const product = await new this.productModel(dto);
       await product.save();
@@ -25,24 +26,27 @@ export class ProductService {
   }
 
   async fetchAllByRole(email: string) {
+    this.logger.debug(email, 'Product service :: fetchAllByRole');
     try {
       return await this.productModel.find({ 'supplier.email': email });
     } catch (error) {
-      this.logger.error(error.message, 'Product service :: getAll');
+      this.logger.error(error.message, 'Product service :: fetchAllByRole');
       throw error;
     }
   }
 
   async fetchAll() {
+    this.logger.debug('Product service :: fetchAll');
     try {
       return await this.productModel.find();
     } catch (error) {
-      this.logger.error(error.message, 'Product service :: getAll');
+      this.logger.error(error.message, 'Product service :: fetchAll');
       throw error;
     }
   }
 
   async fetchById(productId: string) {
+    this.logger.debug(productId, 'Product service :: fetchById');
     const objectIdProductId = new Types.ObjectId(productId);
     try {
       return await this.productModel.findById(objectIdProductId);
@@ -53,6 +57,7 @@ export class ProductService {
   }
 
   async update(productId: string, email: string, dto: EditProductDto) {
+    this.logger.debug({ productId, email, dto }, 'Product service :: update');
     const objectIdProductId = new Types.ObjectId(productId);
     try {
       const product = await this.productModel.findOne({
@@ -88,6 +93,7 @@ export class ProductService {
   }
 
   async remove(productId: string, email: string) {
+    this.logger.debug({ productId, email }, 'Product service :: remove');
     const objectIdProductId = new Types.ObjectId(productId);
     try {
       return await this.productModel.findOneAndDelete({
@@ -95,7 +101,7 @@ export class ProductService {
         'supplier.email': email
       });
     } catch (error) {
-      this.logger.error(error.message, 'Product service :: update');
+      this.logger.error(error.message, 'Product service :: remove');
       throw error;
     }
   }

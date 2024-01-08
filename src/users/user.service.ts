@@ -12,6 +12,7 @@ export class UserService {
   constructor(@InjectModel('User') private readonly userModel: Model<User>) {}
 
   async update(userId: string, dto: EditUserDto) {
+    this.logger.debug({ userId, dto }, 'User service :: update');
     const objectIdUserId = new Types.ObjectId(userId);
     try {
       const user = await this.userModel.findByIdAndUpdate(
