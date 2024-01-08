@@ -10,11 +10,11 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import * as _ from 'lodash';
-import buildPayloadResponse from 'src/utils/buildResponsePayload';
-import handleError from 'src/utils/handleError';
-import httpResponses from 'src/utils/responses';
 import { GetUser } from '../auth/decorator';
 import { JwtGuard } from '../auth/guard';
+import buildPayloadResponse from '../utils/buildResponsePayload';
+import handleError from '../utils/handleError';
+import httpResponses from '../utils/responses';
 import { EditUserDto } from './dto';
 import { User } from './interface/user.interface';
 import { UserService } from './user.service';
@@ -37,16 +37,15 @@ export class UserController {
 
   @Patch()
   async update(
-    @GetUser('id') userId: number,
+    @GetUser('sub') userId: string,
     @Res() res: Response,
     @Body() dto: EditUserDto
   ) {
     this.logger.debug(dto, 'User controller :: update');
     try {
       const updateUser = await this.userService.update(userId, dto);
-
       return res
-        .status(HttpStatus.CREATED)
+        .status(HttpStatus.OK)
         .json(buildPayloadResponse(httpResponses.OK, updateUser));
     } catch (error) {
       this.logger.error(error.message, 'User controller :: update');

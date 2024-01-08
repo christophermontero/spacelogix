@@ -15,14 +15,15 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import * as _ from 'lodash';
-import { Types } from 'mongoose';
-import { GetUser } from 'src/auth/decorator';
-import { JwtGuard } from 'src/auth/guard';
-import { ProductService } from 'src/products/product.service';
-import { User, UserRole } from 'src/users/interface/user.interface';
-import buildPayloadResponse from 'src/utils/buildResponsePayload';
-import handleError from 'src/utils/handleError';
-import httpResponses from 'src/utils/responses';
+import { EditProductDto } from 'src/products/dto';
+import { Product } from 'src/products/interface/product.interface';
+import { GetUser } from '../auth/decorator';
+import { JwtGuard } from '../auth/guard';
+import { ProductService } from '../products/product.service';
+import { User, UserRole } from '../users/interface/user.interface';
+import buildPayloadResponse from '../utils/buildResponsePayload';
+import handleError from '../utils/handleError';
+import httpResponses from '../utils/responses';
 import { OrderDto } from './dto';
 import { OrderService } from './order.service';
 
@@ -63,15 +64,25 @@ export class OrderController {
         address: user.address
       };
 
-      const missingProducts = await Promise.all(
+      const products = await Promise.all(
         dto.products.map((prodId: string) =>
           this.productService.fetchById(prodId)
         )
-      ).then((products) => products.some((prod) => _.isNull(prod)));
+      );
+
+      const missingProducts = products.some((prod) => _.isNull(prod));
 
       if (missingProducts) {
         throw new NotFoundException(httpResponses.MISSING_PRODUCTS);
       }
+
+      await Promise.all(
+        products.map((prod: Product) =>
+          this.productService.update(prod.id, prod.supplier.email, {
+            stock: prod.stock - 1
+          } as EditProductDto)
+        )
+      );
 
       await this.orderService.create(dto);
       return res
@@ -135,11 +146,10 @@ export class OrderController {
   ) {
     this.logger.debug('Order controller :: remove');
     if (user.role !== UserRole.Customer) {
-      throw new ForbiddenException();
+      throw new ForbiddenException(httpResponses.FORBIDDEN.message);
     }
-    const objectIdOrderId = new Types.ObjectId(orderId);
     try {
-      const order = await this.orderService.remove(objectIdOrderId, user.email);
+      const order = await this.orderService.remove(orderId, user.email);
 
       if (!order) {
         throw new NotFoundException(httpResponses.ORDER_NOT_EXISTS.message);

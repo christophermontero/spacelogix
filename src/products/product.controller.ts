@@ -15,13 +15,12 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import * as _ from 'lodash';
-import { Types } from 'mongoose';
-import { GetUser } from 'src/auth/decorator';
-import { JwtGuard } from 'src/auth/guard';
-import { User, UserRole } from 'src/users/interface/user.interface';
-import buildPayloadResponse from 'src/utils/buildResponsePayload';
-import handleError from 'src/utils/handleError';
-import httpResponses from 'src/utils/responses';
+import { GetUser } from '../auth/decorator';
+import { JwtGuard } from '../auth/guard';
+import { User, UserRole } from '../users/interface/user.interface';
+import buildPayloadResponse from '../utils/buildResponsePayload';
+import handleError from '../utils/handleError';
+import httpResponses from '../utils/responses';
 import { EditProductDto, ProductDto } from './dto';
 import { ProductService } from './product.service';
 
@@ -40,7 +39,7 @@ export class ProductController {
   ) {
     this.logger.debug(dto, 'Product controller :: create');
     if (user.role !== UserRole.Supplier) {
-      throw new ForbiddenException();
+      throw new ForbiddenException(httpResponses.FORBIDDEN.message);
     }
     try {
       dto = {
@@ -54,13 +53,10 @@ export class ProductController {
           address: user.address
         }
       };
-      const product = await this.productService.create(dto);
-      const proctectedProduct = this.protectProduct(product);
-      return res.status(HttpStatus.CREATED).json(
-        buildPayloadResponse(httpResponses.CREATED, {
-          product: proctectedProduct
-        })
-      );
+      await this.productService.create(dto);
+      return res
+        .status(HttpStatus.CREATED)
+        .json(buildPayloadResponse(httpResponses.CREATED));
     } catch (error) {
       this.logger.error(error.message, 'Product controller :: create');
       return handleError(res, error);
@@ -122,12 +118,11 @@ export class ProductController {
   ) {
     this.logger.debug('Product controller :: update');
     if (user.role !== UserRole.Supplier) {
-      throw new ForbiddenException();
+      throw new ForbiddenException(httpResponses.FORBIDDEN.message);
     }
-    const objectIdProductId = new Types.ObjectId(productId);
     try {
       const product = await this.productService.update(
-        objectIdProductId,
+        productId,
         user.email,
         dto
       );
@@ -156,14 +151,10 @@ export class ProductController {
   ) {
     this.logger.debug('Product controller :: remove');
     if (user.role !== UserRole.Supplier) {
-      throw new ForbiddenException();
+      throw new ForbiddenException(httpResponses.FORBIDDEN.message);
     }
-    const objectIdProductId = new Types.ObjectId(productId);
     try {
-      const product = await this.productService.remove(
-        objectIdProductId,
-        user.email
-      );
+      const product = await this.productService.remove(productId, user.email);
 
       if (!product) {
         throw new NotFoundException(httpResponses.PRODUCT_NOT_EXISTS.message);
