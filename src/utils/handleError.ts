@@ -46,11 +46,20 @@ const handleError = (res: Response, err: Error) => {
       );
     }
   } else if (err instanceof UnprocessableEntityException) {
-    response = buildResponse(
-      res,
-      HttpStatus.UNPROCESSABLE_ENTITY,
-      httpResponses.INVALID_PASSWORD
-    );
+    if (err.message === httpResponses.INVALID_PASSWORD.message) {
+      response = buildResponse(
+        res,
+        HttpStatus.UNPROCESSABLE_ENTITY,
+        httpResponses.INVALID_PASSWORD
+      );
+    }
+    if (err.message === httpResponses.TOO_MANY_PRODUCTS.message) {
+      response = buildResponse(
+        res,
+        HttpStatus.UNPROCESSABLE_ENTITY,
+        httpResponses.TOO_MANY_PRODUCTS
+      );
+    }
   } else if (err instanceof ForbiddenException) {
     response = buildResponse(
       res,

@@ -35,6 +35,10 @@ const httpResponses = {
     code: 'INVALID_PASSWORD',
     message: 'Invalid password'
   },
+  TOO_MANY_PRODUCTS: {
+    code: 'TOO_MANY_PRODUCTS',
+    message: 'The order has too many products than allowed'
+  },
   INTERNAL_SERVER_ERROR: {
     code: 'INTERNAL_SERVER_ERROR',
     message: '¡Ups! An error has occurred'

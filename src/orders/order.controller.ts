@@ -10,6 +10,7 @@ import {
   Param,
   Post,
   Res,
+  UnprocessableEntityException,
   UseGuards
 } from '@nestjs/common';
 import { Response } from 'express';
@@ -17,6 +18,7 @@ import * as _ from 'lodash';
 import { Types } from 'mongoose';
 import { GetUser } from 'src/auth/decorator';
 import { JwtGuard } from 'src/auth/guard';
+import { ProductService } from 'src/products/product.service';
 import { User, UserRole } from 'src/users/interface/user.interface';
 import buildPayloadResponse from 'src/utils/buildResponsePayload';
 import handleError from 'src/utils/handleError';
@@ -29,7 +31,10 @@ import { OrderService } from './order.service';
 export class OrderController {
   private readonly logger = new Logger();
 
-  constructor(private orderService: OrderService) {}
+  constructor(
+    private orderService: OrderService,
+    private productService: ProductService
+  ) {}
 
   @Post()
   async create(
@@ -38,9 +43,17 @@ export class OrderController {
     @Body() dto: OrderDto
   ) {
     this.logger.debug(dto, 'Order controller :: create');
+
+    if (dto.products.length > 15) {
+      throw new UnprocessableEntityException(
+        httpResponses.TOO_MANY_PRODUCTS.message
+      );
+    }
+
     if (user.role !== UserRole.Customer) {
       throw new ForbiddenException();
     }
+
     dto.customer = {
       name: user.name,
       email: user.email,
@@ -50,6 +63,11 @@ export class OrderController {
       address: user.address
     };
     try {
+      await Promise.all(
+        dto.products.map((product: string) =>
+          this.productService.fetchById(new Types.ObjectId(product))
+        )
+      );
       const order = await this.orderService.create(dto);
       const proctectedOrders = this.protectOrder(order);
       return res.status(HttpStatus.CREATED).json(
