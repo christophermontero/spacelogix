@@ -6,7 +6,7 @@ import {
   UnprocessableEntityException
 } from '@nestjs/common';
 import { Response } from 'express';
-import httpResponses from 'src/utils/responses';
+import httpResponses from '../utils/responses';
 import buildPayloadResponse from './buildResponsePayload';
 
 const buildResponse = (

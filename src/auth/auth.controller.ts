@@ -10,10 +10,10 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import * as _ from 'lodash';
-import { User } from 'src/users/interface/user.interface';
-import buildPayloadResponse from 'src/utils/buildResponsePayload';
-import handleError from 'src/utils/handleError';
-import httpResponses from 'src/utils/responses';
+import { User } from '../users/interface/user.interface';
+import buildPayloadResponse from '../utils/buildResponsePayload';
+import handleError from '../utils/handleError';
+import httpResponses from '../utils/responses';
 import { AuthService } from './auth.service';
 import { GetUser } from './decorator';
 import { SigninDto, SignupDto } from './dto';

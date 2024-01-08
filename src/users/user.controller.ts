@@ -10,9 +10,9 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import * as _ from 'lodash';
-import buildPayloadResponse from 'src/utils/buildResponsePayload';
-import handleError from 'src/utils/handleError';
-import httpResponses from 'src/utils/responses';
+import buildPayloadResponse from '../utils/buildResponsePayload';
+import handleError from '../utils/handleError';
+import httpResponses from '../utils/responses';
 import { GetUser } from '../auth/decorator';
 import { JwtGuard } from '../auth/guard';
 import { EditUserDto } from './dto';

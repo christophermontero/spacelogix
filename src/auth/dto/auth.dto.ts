@@ -5,7 +5,7 @@ import {
   IsOptional,
   IsString
 } from 'class-validator';
-import { UserRole } from 'src/users/interface/user.interface';
+import { UserRole } from '../users/interface/user.interface';
 import { IsValidPassword } from '../validator/password.validator';
 
 export class SignupDto {

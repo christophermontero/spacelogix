@@ -1,7 +1,7 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
-import httpResponses from 'src/utils/responses';
+import httpResponses from '../utils/responses';
 import { EditProductDto, ProductDto } from './dto';
 import { Product } from './interface/product.interface';
 

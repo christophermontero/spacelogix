@@ -16,12 +16,12 @@ import {
 import { Response } from 'express';
 import * as _ from 'lodash';
 import { Types } from 'mongoose';
-import { GetUser } from 'src/auth/decorator';
-import { JwtGuard } from 'src/auth/guard';
-import { User, UserRole } from 'src/users/interface/user.interface';
-import buildPayloadResponse from 'src/utils/buildResponsePayload';
-import handleError from 'src/utils/handleError';
-import httpResponses from 'src/utils/responses';
+import { GetUser } from '../auth/decorator';
+import { JwtGuard } from '../auth/guard';
+import { User, UserRole } from '../users/interface/user.interface';
+import buildPayloadResponse from '../utils/buildResponsePayload';
+import handleError from '../utils/handleError';
+import httpResponses from '../utils/responses';
 import { EditProductDto, ProductDto } from './dto';
 import { ProductService } from './product.service';
 

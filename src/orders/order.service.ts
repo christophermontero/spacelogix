@@ -1,9 +1,9 @@
 import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
-import { Product } from 'src/products/interface/product.interface';
-import { UserRole } from 'src/users/interface/user.interface';
-import httpResponses from 'src/utils/responses';
+import { Product } from '../products/interface/product.interface';
+import { UserRole } from '../users/interface/user.interface';
+import httpResponses from '../utils/responses';
 import { OrderDto } from './dto';
 import { Order } from './interface/order.interface';
 
