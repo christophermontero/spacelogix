@@ -16,7 +16,7 @@
 
 SpaceLogix is a cutting-edge logistics system that specializes in managing and optimizing space-related operations with the power of RESTful APIs.
 
-### Feature
+### Features
 
 For see full documentation, please visit [SpaceLogix API docs](https://documenter.getpostman.com/view/11299055/2s9YsJBXwZ#0ed4a3be-cb54-4443-8635-c7f799a4c1aa)
 
