@@ -75,6 +75,7 @@ describe('OrderController', () => {
           country: 'Supplier1 Country'
         }
       });
+      productService.update = jest.fn().mockReturnValue({});
       orderService.create = jest.fn();
       const res: Partial<Response> = {
         status: jest.fn().mockReturnThis(),

@@ -15,6 +15,8 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import * as _ from 'lodash';
+import { EditProductDto } from 'src/products/dto';
+import { Product } from 'src/products/interface/product.interface';
 import { GetUser } from '../auth/decorator';
 import { JwtGuard } from '../auth/guard';
 import { ProductService } from '../products/product.service';
@@ -62,15 +64,25 @@ export class OrderController {
         address: user.address
       };
 
-      const missingProducts = await Promise.all(
+      const products = await Promise.all(
         dto.products.map((prodId: string) =>
           this.productService.fetchById(prodId)
         )
-      ).then((products) => products.some((prod) => _.isNull(prod)));
+      );
+
+      const missingProducts = products.some((prod) => _.isNull(prod));
 
       if (missingProducts) {
         throw new NotFoundException(httpResponses.MISSING_PRODUCTS);
       }
+
+      await Promise.all(
+        products.map((prod: Product) =>
+          this.productService.update(prod.id, prod.supplier.email, {
+            stock: prod.stock - 1
+          } as EditProductDto)
+        )
+      );
 
       await this.orderService.create(dto);
       return res
