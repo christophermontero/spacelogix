@@ -167,12 +167,42 @@ git clone https://github.com/christophermontero/spacelogix.git
 cd spacelogix
 ```
 
+Make sure you have MongoDB running before start the project in development mode.
+
+```bash
+yarn start:dev
+```
+
 ### Containers
 
-This project also support docker engine, for use the API with containers ensure have docker and docker compose installed and run following commands:
+This project supports Docker. To use the API with containers, follow these steps:
+
+1. Ensure you have Docker and Docker Compose installed on your system.
+
+2. Set the database connection in the app.module.ts file to: mongodb://mongodb:27017/spacelogixdb.
+
+3. Run the following commands:
 
 ```bash
 docker compose -f docker.compose.yml -f docker-compose.dev.yml up -d
+```
+
+And for production run the following:
+
+```bash
+docker compose -f docker.compose.yml -f docker-compose.prod.yml up -d
+```
+
+For stop the containers run the following:
+
+```bash
+docker compose -f docker.compose.yml -f docker-compose.dev.yml stop
+```
+
+And for destroy the services use the following command:
+
+```bash
+docker compose -f docker.compose.yml -f docker-compose.dev.yml down
 ```
 
 ## Comments
