@@ -1,0 +1,6 @@
+version: '3.8'
+
+services:
+  spacelogix:
+    container_name: spacelogix-api
+    command: yarn start

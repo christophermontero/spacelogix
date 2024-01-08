@@ -1,24 +1,30 @@
 version: '3.8'
+
 services:
-  dev-db:
-    image: postgres:13
+  spacelogix:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: spacelogix
+    depends_on:
+      - mongodb
     ports:
-      - 5434:5432
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123
-      POSTGRES_DB: nest
+      - '3000:3000'
+    volumes:
+      - .:/logixdb
     networks:
-      - freecodecamp
-  test-db:
-    image: postgres:13
+      - logixnetwork
+  mongodb:
+    image: mongo:4.2.1-bionic
     ports:
-      - 5435:5432
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123
-      POSTGRES_DB: nest
+      - '27017:27017'
+    volumes:
+      - logixdb:/data/db
     networks:
-      - freecodecamp
+      - logixnetwork
+
+volumes:
+  logixdb:
+
 networks:
-  freecodecamp:
+  logixnetwork:
