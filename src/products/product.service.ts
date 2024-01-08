@@ -52,10 +52,11 @@ export class ProductService {
     }
   }
 
-  async update(productId: Types.ObjectId, email: string, dto: EditProductDto) {
+  async update(productId: string, email: string, dto: EditProductDto) {
+    const objectIdProductId = new Types.ObjectId(productId);
     try {
       const product = await this.productModel.findOne({
-        _id: productId,
+        _id: objectIdProductId,
         'supplier.email': email
       });
 
@@ -86,10 +87,11 @@ export class ProductService {
     }
   }
 
-  async remove(productId: Types.ObjectId, email: string) {
+  async remove(productId: string, email: string) {
+    const objectIdProductId = new Types.ObjectId(productId);
     try {
       return await this.productModel.findOneAndDelete({
-        _id: productId,
+        _id: objectIdProductId,
         'supplier.email': email
       });
     } catch (error) {

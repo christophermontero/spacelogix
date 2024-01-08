@@ -159,7 +159,7 @@ describe('OrderController', () => {
   });
 
   describe('getById', () => {
-    it('should create an order for a customer', async () => {
+    it('should get an order using its id', async () => {
       orderService.fetchById = jest.fn().mockResolvedValue({});
       const res: Partial<Response> = {
         status: jest.fn().mockReturnThis(),
@@ -170,7 +170,7 @@ describe('OrderController', () => {
       expect(result.status).toHaveBeenCalledWith(HttpStatus.OK);
     });
 
-    it('should throw UnprocessableEntityException if too many products are provided', async () => {
+    it('should throw NotFoundException if order does not exist', async () => {
       orderService.fetchById = jest.fn().mockResolvedValue(null);
       const res: Partial<Response> = {
         status: jest.fn().mockReturnThis(),
