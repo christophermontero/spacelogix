@@ -2,8 +2,6 @@
 
 - [Project description](#project-description)
   - [Features](#features)
-  - [Architecture](#architecture)
-    - [Use case diagram](#use-case-diagram)
 - [Requirements](#requeriments)
 - [User guide](#user-guide)
   - [Endpoints](#endpoints)
@@ -21,10 +19,6 @@ SpaceLogix is a cutting-edge logistics system that specializes in managing and o
 ### Feature
 
 For see full documentation, please visit [SpaceLogix API docs](https://documenter.getpostman.com/view/11299055/2s9YsJBXwZ#0ed4a3be-cb54-4443-8635-c7f799a4c1aa)
-
-### Architecture
-
-#### Use case diagram
 
 ## Requirements
 
