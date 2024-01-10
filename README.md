@@ -1,6 +1,7 @@
 # SpaceLogix
 
 - [Project description](#project-description)
+  - [Architecture](#architecture)
   - [Features](#features)
 - [Requirements](#requirements)
 - [User guide](#user-guide)
@@ -15,6 +16,16 @@
 ## Project description
 
 SpaceLogix is a cutting-edge logistics system that specializes in managing and optimizing space-related operations with the power of RESTful APIs.
+
+### Architecture
+
+#### Use cases
+
+![use case diagram](./docs/diagrams/usecase.jpg)
+
+#### Deployment
+
+![deployment diagram](./docs/diagrams/deployment.jpg)
 
 ### Features
 
