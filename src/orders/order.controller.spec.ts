@@ -60,6 +60,7 @@ describe('OrderController', () => {
           description: 'description 3',
           price: 1000,
           currency: Currency.USD,
+          quantity: 1,
           supplier: {
             name: 'supplier2',
             email: 'supplier2@mailinator.com',

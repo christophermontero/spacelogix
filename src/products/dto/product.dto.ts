@@ -4,6 +4,7 @@ import {
   IsNotEmpty,
   IsNumber,
   IsOptional,
+  IsPositive,
   IsString,
   ValidateNested
 } from 'class-validator';
@@ -45,6 +46,7 @@ export class ProductDto {
   description: string;
 
   @IsNumber()
+  @IsPositive()
   @IsNotEmpty()
   price: number;
 
@@ -53,6 +55,7 @@ export class ProductDto {
   currency: Currency;
 
   @IsNumber()
+  @IsPositive()
   @IsNotEmpty()
   stock: number;
 
@@ -72,6 +75,7 @@ export class EditProductDto {
   description: string;
 
   @IsNumber()
+  @IsPositive()
   @IsOptional()
   price: number;
 
@@ -80,6 +84,7 @@ export class EditProductDto {
   currency: Currency;
 
   @IsNumber()
+  @IsPositive()
   @IsOptional()
   stock: number;
 }

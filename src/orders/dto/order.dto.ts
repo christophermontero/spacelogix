@@ -6,6 +6,7 @@ import {
   IsNotEmpty,
   IsNumber,
   IsOptional,
+  IsPositive,
   IsString,
   ValidateNested
 } from 'class-validator';
@@ -105,6 +106,7 @@ class PaymentDto {
   billingAddress: BillingAddressDto;
 
   @IsNumber()
+  @IsPositive()
   @IsNotEmpty()
   totalAmount: number;
 
@@ -124,8 +126,14 @@ export class ProductOrderDto {
   description: string;
 
   @IsNumber()
+  @IsPositive()
   @IsNotEmpty()
   price: number;
+
+  @IsNumber()
+  @IsPositive()
+  @IsNotEmpty()
+  quantity: number;
 
   @IsEnum(Currency)
   @IsNotEmpty()

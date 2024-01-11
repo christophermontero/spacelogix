@@ -50,6 +50,7 @@ interface ProductOrder extends Document {
   name: string;
   description?: string;
   price: number;
+  quantity: number;
   currency: Currency;
   supplier: {
     name: string;

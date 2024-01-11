@@ -11,7 +11,7 @@ export interface Product extends Document {
   description?: string;
   price: number;
   currency: Currency;
-  stock?: number;
+  stock: number;
   supplier: {
     name: string;
     email: string;

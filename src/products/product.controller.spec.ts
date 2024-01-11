@@ -104,11 +104,7 @@ describe('ProductController', () => {
         productId,
         dto as EditProductDto
       );
-      expect(productService.update).toHaveBeenCalledWith(
-        productId,
-        user.email,
-        dto
-      );
+      expect(productService.update).toHaveBeenCalledWith(productId, dto);
       expect(result.status).toHaveBeenCalledWith(HttpStatus.OK);
     });
 

@@ -77,9 +77,9 @@ export class OrderController {
       }
 
       await Promise.all(
-        products.map((prod: Product) =>
+        products.map((prod: Product, index: number) =>
           this.productService.update(prod.id, {
-            stock: prod.stock - 1
+            stock: prod.stock - dto.products[index].quantity
           } as EditProductDto)
         )
       );
