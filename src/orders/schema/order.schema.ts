@@ -33,11 +33,6 @@ const OrderSchema = new mongoose.Schema(
           maxLength: 255,
           required: true
         },
-        stock: {
-          type: Number,
-          trim: true,
-          required: true
-        },
         supplier: {
           name: {
             type: String,

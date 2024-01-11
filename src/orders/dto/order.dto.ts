@@ -9,7 +9,7 @@ import {
   IsString,
   ValidateNested
 } from 'class-validator';
-import { ProductDto } from '../../products/dto/index';
+import { SupplierDto } from '../../products/dto/index';
 import { Currency, PaymentMethod } from '../interface/order.interface';
 
 class BillingAddressDto {
@@ -114,11 +114,34 @@ class PaymentDto {
   currency: Currency;
 }
 
+export class ProductOrderDto {
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+
+  @IsString()
+  @IsOptional()
+  description: string;
+
+  @IsNumber()
+  @IsNotEmpty()
+  price: number;
+
+  @IsEnum(Currency)
+  @IsNotEmpty()
+  currency: Currency;
+
+  @ValidateNested()
+  @IsOptional()
+  @Type(() => SupplierDto)
+  supplier: SupplierDto;
+}
+
 export class OrderDto {
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => ProductDto)
-  products: ProductDto[];
+  @Type(() => ProductOrderDto)
+  products: ProductOrderDto[];
 
   @ValidateNested()
   @Type(() => CustomerDto)

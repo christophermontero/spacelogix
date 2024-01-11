@@ -1,5 +1,4 @@
 import { Document } from 'mongoose';
-import { Product } from 'src/products/interface/product.interface';
 
 export enum PaymentMethod {
   CreditCard = 'credit',
@@ -47,8 +46,23 @@ interface Payment {
   currency: string;
 }
 
+interface ProductOrder extends Document {
+  name: string;
+  description?: string;
+  price: number;
+  currency: Currency;
+  supplier: {
+    name: string;
+    email: string;
+    phone: string;
+    address: string;
+    city: string;
+    country: string;
+  };
+}
+
 export interface Order extends Document {
-  products: Product[];
+  products: ProductOrder[];
   customer: Customer;
   transporter: Transporter;
   payment: Payment;
