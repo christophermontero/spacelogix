@@ -8,6 +8,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Response } from 'express';
 import { OrderModel } from '../mockData/order.model.mock';
 import { ProductModel } from '../mockData/product.model.mock';
+import { Currency } from '../products/interface/product.interface';
 import { ProductService } from '../products/product.service';
 import { User, UserRole } from '../users/interface/user.interface';
 import httpResponses from '../utils/responses';
@@ -53,14 +54,30 @@ describe('OrderController', () => {
       role: UserRole.Customer
     };
     dto = {
-      products: ['659b50aabd8aa10100e284fb']
+      products: [
+        {
+          name: 'product 3',
+          description: 'description 3',
+          price: 1000,
+          currency: Currency.USD,
+          quantity: 1,
+          supplier: {
+            name: 'supplier2',
+            email: 'supplier2@mailinator.com',
+            phone: '98765432',
+            address: 'fake st. 123',
+            city: 'supplier2 city',
+            country: 'supplier2 country'
+          }
+        }
+      ]
     };
     orderId = 'orderId';
   });
 
   describe('create', () => {
     it('should create an order for a customer', async () => {
-      productService.fetchById = jest.fn().mockReturnValue({
+      productService.fetchByName = jest.fn().mockReturnValue({
         name: 'Product 1',
         description: 'Description 1',
         price: 1000,
@@ -125,7 +142,7 @@ describe('OrderController', () => {
     });
 
     it('should throw NotFoundException if some products are missing', async () => {
-      productService.fetchById = jest.fn().mockReturnValue(null);
+      productService.fetchByName = jest.fn().mockReturnValue(null);
       const res: Partial<Response> = {
         status: jest.fn().mockReturnThis(),
         json: jest.fn().mockReturnThis()

@@ -1,4 +1,9 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  Logger,
+  NotFoundException
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import httpResponses from '../utils/responses';
@@ -21,6 +26,9 @@ export class ProductService {
       return product;
     } catch (error) {
       this.logger.error(error.message, 'Product service :: create');
+      if (error.code === 11000) {
+        throw new ConflictException(httpResponses.PRODUCT_EXISTS.message);
+      }
       throw error;
     }
   }
@@ -56,13 +64,22 @@ export class ProductService {
     }
   }
 
-  async update(productId: string, email: string, dto: EditProductDto) {
-    this.logger.debug({ productId, email, dto }, 'Product service :: update');
+  async fetchByName(prodName: string) {
+    this.logger.debug(prodName, 'Product service :: fetchByName');
+    try {
+      return await this.productModel.findOne({ name: prodName });
+    } catch (error) {
+      this.logger.error(error.message, 'Product service :: fetchByName');
+      throw error;
+    }
+  }
+
+  async update(productId: string, dto: EditProductDto) {
+    this.logger.debug({ productId, dto }, 'Product service :: update');
     const objectIdProductId = new Types.ObjectId(productId);
     try {
-      const product = await this.productModel.findOne({
-        _id: objectIdProductId,
-        'supplier.email': email
+      const product = await this.productModel.findById({
+        _id: objectIdProductId
       });
 
       if (!product) {

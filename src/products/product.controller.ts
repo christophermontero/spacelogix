@@ -53,10 +53,12 @@ export class ProductController {
           address: user.address
         }
       };
-      await this.productService.create(dto);
+      const product = await this.productService.create(dto);
       return res
         .status(HttpStatus.CREATED)
-        .json(buildPayloadResponse(httpResponses.CREATED));
+        .json(
+          buildPayloadResponse(httpResponses.CREATED, { produId: product._id })
+        );
     } catch (error) {
       this.logger.error(error.message, 'Product controller :: create');
       return handleError(res, error);
@@ -121,11 +123,7 @@ export class ProductController {
       throw new ForbiddenException(httpResponses.FORBIDDEN.message);
     }
     try {
-      const product = await this.productService.update(
-        productId,
-        user.email,
-        dto
-      );
+      const product = await this.productService.update(productId, dto);
 
       if (!product) {
         throw new NotFoundException(httpResponses.PRODUCT_NOT_EXISTS.message);

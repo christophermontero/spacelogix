@@ -24,7 +24,7 @@ import { User, UserRole } from '../users/interface/user.interface';
 import buildPayloadResponse from '../utils/buildResponsePayload';
 import handleError from '../utils/handleError';
 import httpResponses from '../utils/responses';
-import { OrderDto } from './dto';
+import { OrderDto, ProductOrderDto } from './dto';
 import { OrderService } from './order.service';
 
 @UseGuards(JwtGuard)
@@ -65,8 +65,8 @@ export class OrderController {
       };
 
       const products = await Promise.all(
-        dto.products.map((prodId: string) =>
-          this.productService.fetchById(prodId)
+        dto.products.map((prod: ProductOrderDto) =>
+          this.productService.fetchByName(prod.name)
         )
       );
 
@@ -77,17 +77,19 @@ export class OrderController {
       }
 
       await Promise.all(
-        products.map((prod: Product) =>
-          this.productService.update(prod.id, prod.supplier.email, {
-            stock: prod.stock - 1
+        products.map((prod: Product, index: number) =>
+          this.productService.update(prod.id, {
+            stock: prod.stock - dto.products[index].quantity
           } as EditProductDto)
         )
       );
 
-      await this.orderService.create(dto);
+      const order = await this.orderService.create(dto);
       return res
         .status(HttpStatus.CREATED)
-        .json(buildPayloadResponse(httpResponses.CREATED));
+        .json(
+          buildPayloadResponse(httpResponses.CREATED, { orderId: order._id })
+        );
     } catch (error) {
       this.logger.error(error.message, 'Order controller :: create');
       return handleError(res, error);

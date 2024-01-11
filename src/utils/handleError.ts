@@ -18,11 +18,20 @@ const buildResponse = (
 const handleError = (res: Response, err: Error) => {
   let response;
   if (err instanceof ConflictException) {
-    response = buildResponse(
-      res,
-      HttpStatus.CONFLICT,
-      httpResponses.USER_TAKEN
-    );
+    if (err.message === httpResponses.USER_TAKEN.message) {
+      response = buildResponse(
+        res,
+        HttpStatus.CONFLICT,
+        httpResponses.USER_TAKEN
+      );
+    }
+    if (err.message === httpResponses.PRODUCT_EXISTS.message) {
+      response = buildResponse(
+        res,
+        HttpStatus.CONFLICT,
+        httpResponses.PRODUCT_EXISTS
+      );
+    }
   } else if (err instanceof NotFoundException) {
     if (err.message === httpResponses.USER_NOT_EXISTS.message) {
       response = buildResponse(

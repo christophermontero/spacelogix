@@ -27,6 +27,10 @@ const httpResponses = {
     code: 'PRODUCT_NOT_EXISTS',
     message: 'Product not exists'
   },
+  PRODUCT_EXISTS: {
+    code: 'PRODUCT_EXISTS',
+    message: 'Product already exists'
+  },
   MISSING_PRODUCTS: {
     code: 'MISSING_PRODUCTS',
     message: 'Some products are missing'
