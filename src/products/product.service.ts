@@ -1,4 +1,9 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  Logger,
+  NotFoundException
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import httpResponses from '../utils/responses';
@@ -21,6 +26,9 @@ export class ProductService {
       return product;
     } catch (error) {
       this.logger.error(error.message, 'Product service :: create');
+      if (error.code === 11000) {
+        throw new ConflictException(httpResponses.PRODUCT_EXISTS.message);
+      }
       throw error;
     }
   }
@@ -52,6 +60,16 @@ export class ProductService {
       return await this.productModel.findById(objectIdProductId);
     } catch (error) {
       this.logger.error(error.message, 'Product service :: getById');
+      throw error;
+    }
+  }
+
+  async fetchByName(prodName: string) {
+    this.logger.debug(prodName, 'Product service :: fetchByName');
+    try {
+      return await this.productModel.findOne({ name: prodName });
+    } catch (error) {
+      this.logger.error(error.message, 'Product service :: fetchByName');
       throw error;
     }
   }

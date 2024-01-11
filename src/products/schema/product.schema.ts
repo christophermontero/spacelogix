@@ -81,6 +81,8 @@ const ProductSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Define index on name
+ProductSchema.index({ name: 1 }, { unique: true });
 // Define index on supplier.email
 ProductSchema.index({ 'supplier.email': 1 });
 

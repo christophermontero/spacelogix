@@ -6,9 +6,9 @@ import {
 } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Response } from 'express';
-import { Currency } from 'src/products/interface/product.interface';
 import { OrderModel } from '../mockData/order.model.mock';
 import { ProductModel } from '../mockData/product.model.mock';
+import { Currency } from '../products/interface/product.interface';
 import { ProductService } from '../products/product.service';
 import { User, UserRole } from '../users/interface/user.interface';
 import httpResponses from '../utils/responses';
@@ -77,7 +77,7 @@ describe('OrderController', () => {
 
   describe('create', () => {
     it('should create an order for a customer', async () => {
-      productService.fetchById = jest.fn().mockReturnValue({
+      productService.fetchByName = jest.fn().mockReturnValue({
         name: 'Product 1',
         description: 'Description 1',
         price: 1000,
@@ -142,7 +142,7 @@ describe('OrderController', () => {
     });
 
     it('should throw NotFoundException if some products are missing', async () => {
-      productService.fetchById = jest.fn().mockReturnValue(null);
+      productService.fetchByName = jest.fn().mockReturnValue(null);
       const res: Partial<Response> = {
         status: jest.fn().mockReturnThis(),
         json: jest.fn().mockReturnThis()

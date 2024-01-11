@@ -9,7 +9,7 @@ import {
   IsString,
   ValidateNested
 } from 'class-validator';
-import { ProductDto } from 'src/products/dto';
+import { ProductDto } from '../../products/dto/index';
 import { Currency, PaymentMethod } from '../interface/order.interface';
 
 class BillingAddressDto {

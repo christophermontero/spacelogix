@@ -15,7 +15,7 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import * as _ from 'lodash';
-import { EditProductDto } from 'src/products/dto';
+import { EditProductDto, ProductDto } from 'src/products/dto';
 import { Product } from 'src/products/interface/product.interface';
 import { GetUser } from '../auth/decorator';
 import { JwtGuard } from '../auth/guard';
@@ -65,8 +65,8 @@ export class OrderController {
       };
 
       const products = await Promise.all(
-        dto.products.map((prodId: string) =>
-          this.productService.fetchById(prodId)
+        dto.products.map((prod: ProductDto) =>
+          this.productService.fetchByName(prod.name)
         )
       );
 
@@ -84,10 +84,12 @@ export class OrderController {
         )
       );
 
-      await this.orderService.create(dto);
+      const order = await this.orderService.create(dto);
       return res
         .status(HttpStatus.CREATED)
-        .json(buildPayloadResponse(httpResponses.CREATED));
+        .json(
+          buildPayloadResponse(httpResponses.CREATED, { orderId: order._id })
+        );
     } catch (error) {
       this.logger.error(error.message, 'Order controller :: create');
       return handleError(res, error);
