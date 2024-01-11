@@ -9,6 +9,7 @@ import {
   IsString,
   ValidateNested
 } from 'class-validator';
+import { ProductDto } from 'src/products/dto';
 import { Currency, PaymentMethod } from '../interface/order.interface';
 
 class BillingAddressDto {
@@ -115,7 +116,9 @@ class PaymentDto {
 
 export class OrderDto {
   @IsArray()
-  products: string[];
+  @ValidateNested({ each: true })
+  @Type(() => ProductDto)
+  products: ProductDto[];
 
   @ValidateNested()
   @Type(() => CustomerDto)

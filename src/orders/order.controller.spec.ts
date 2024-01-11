@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Response } from 'express';
+import { Currency } from 'src/products/interface/product.interface';
 import { OrderModel } from '../mockData/order.model.mock';
 import { ProductModel } from '../mockData/product.model.mock';
 import { ProductService } from '../products/product.service';
@@ -53,7 +54,23 @@ describe('OrderController', () => {
       role: UserRole.Customer
     };
     dto = {
-      products: ['659b50aabd8aa10100e284fb']
+      products: [
+        {
+          name: 'product 3',
+          description: 'description 3',
+          price: 1000,
+          currency: Currency.USD,
+          stock: 100,
+          supplier: {
+            name: 'supplier2',
+            email: 'supplier2@mailinator.com',
+            phone: '98765432',
+            address: 'fake st. 123',
+            city: 'supplier2 city',
+            country: 'supplier2 country'
+          }
+        }
+      ]
     };
     orderId = 'orderId';
   });

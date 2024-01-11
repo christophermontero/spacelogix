@@ -243,5 +243,7 @@ const OrderSchema = new mongoose.Schema(
 OrderSchema.index({ 'customer.email': 1 });
 // Define index on transporter.email
 OrderSchema.index({ 'transporter.email': 1 });
+// Define index on products.supplier.email
+OrderSchema.index({ 'products.supplier.email': 1 });
 
 export default OrderSchema;
