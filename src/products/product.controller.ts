@@ -123,11 +123,7 @@ export class ProductController {
       throw new ForbiddenException(httpResponses.FORBIDDEN.message);
     }
     try {
-      const product = await this.productService.update(
-        productId,
-        user.email,
-        dto
-      );
+      const product = await this.productService.update(productId, dto);
 
       if (!product) {
         throw new NotFoundException(httpResponses.PRODUCT_NOT_EXISTS.message);

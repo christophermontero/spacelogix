@@ -74,13 +74,12 @@ export class ProductService {
     }
   }
 
-  async update(productId: string, email: string, dto: EditProductDto) {
-    this.logger.debug({ productId, email, dto }, 'Product service :: update');
+  async update(productId: string, dto: EditProductDto) {
+    this.logger.debug({ productId, dto }, 'Product service :: update');
     const objectIdProductId = new Types.ObjectId(productId);
     try {
-      const product = await this.productModel.findOne({
-        _id: objectIdProductId,
-        'supplier.email': email
+      const product = await this.productModel.findById({
+        _id: objectIdProductId
       });
 
       if (!product) {
