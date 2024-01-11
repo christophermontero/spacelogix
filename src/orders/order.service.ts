@@ -41,12 +41,7 @@ export class OrderService {
       throw new ForbiddenException(httpResponses.FORBIDDEN.message);
     }
     try {
-      return await this.orderModel
-        .find(criteria)
-        .populate(
-          'products',
-          '_id name description price currency stock supplier'
-        );
+      return await this.orderModel.find(criteria);
     } catch (error) {
       this.logger.error(error.message, 'Order service :: fetchAllByRole');
       throw error;
@@ -57,12 +52,7 @@ export class OrderService {
     this.logger.debug(orderId, 'Order service :: fetchById');
     const objectIdOrderId = new Types.ObjectId(orderId);
     try {
-      return await this.orderModel
-        .findById(objectIdOrderId)
-        .populate(
-          'products',
-          '_id name description price currency stock supplier'
-        );
+      return await this.orderModel.findById(objectIdOrderId);
     } catch (error) {
       this.logger.error(error.message, 'Order service :: fetchById');
       throw error;
