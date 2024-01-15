@@ -215,7 +215,7 @@ describe('OrderController', () => {
         res as Response,
         orderId
       );
-      expect(orderService.remove).toHaveBeenCalledWith(orderId, user.email);
+      expect(orderService.remove).toHaveBeenCalledWith(orderId);
       expect(result.status).toHaveBeenCalledWith(HttpStatus.OK);
     });
 

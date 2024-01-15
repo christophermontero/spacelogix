@@ -151,7 +151,7 @@ export class OrderController {
       throw new ForbiddenException(httpResponses.FORBIDDEN.message);
     }
     try {
-      const order = await this.orderService.remove(orderId, user.email);
+      const order = await this.orderService.remove(orderId);
 
       if (!order) {
         throw new NotFoundException(httpResponses.ORDER_NOT_EXISTS.message);
