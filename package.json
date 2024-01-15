@@ -20,6 +20,10 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "prepare": "husky install"
   },
+  "engines": {
+    "node": "14.21.3"
+  },
+  "packageManager": "yarn@1.22.21",
   "dependencies": {
     "@nestjs/common": "^8.0.0",
     "@nestjs/config": "^1.1.6",

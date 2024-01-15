@@ -1,0 +1,29 @@
+name: pokeapi-pipeline
+
+on:
+  push:
+    branches:
+      - feature/*
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+      - name: Print variables names 📝
+        run: |
+          echo "JWT_ACCESS_EXPIRATION_SECONDS=${{ vars.JWT_ACCESS_EXPIRATION_SECONDS }}"
+          echo "JWT_ALGORITHM=${{ vars.JWT_ALGORITHM }}"
+          echo "JWT_ISSUER=${{ vars.JWT_ISSUER }}"
+      - name: Set up Node.js 🚨
+        uses: actions/setup-node@v3
+        with:
+          node-version: '14.21.3'
+      - name: Install dependencies 🔧
+        run: yarn install
+      - name: Test 🧪
+        run: yarn test
