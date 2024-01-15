@@ -6,8 +6,8 @@ import {
 } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Response } from 'express';
-import { OrderModel } from '../mockData/order.model.mock';
-import { ProductModel } from '../mockData/product.model.mock';
+import { OrderModel } from '../../test/mockData/order.model.mock';
+import { ProductModel } from '../../test/mockData/product.model.mock';
 import { Currency } from '../products/interface/product.interface';
 import { ProductService } from '../products/product.service';
 import { User, UserRole } from '../users/interface/user.interface';

@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Response } from 'express';
-import { UserModel } from '../mockData/user.model.mock';
+import { UserModel } from '../../test/mockData/user.model.mock';
 import { User, UserRole } from '../users/interface/user.interface';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';

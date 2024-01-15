@@ -51,13 +51,14 @@ describe('OrderService', () => {
 
     it('should create a new order', async () => {
       const saveSpy = jest.spyOn(MockOrderModel.prototype, 'save');
+
       await orderService.create(orderDto as OrderDto);
 
       expect(saveSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should throw an error when is saving the order', async () => {
-      const mockError = new Error('Mock error message');
+      const mockError = new Error('Saving product error');
       jest.spyOn(MockOrderModel.prototype, 'save').mockRejectedValue(mockError);
 
       await expect(orderService.create(orderDto as OrderDto)).rejects.toThrow(

@@ -78,9 +78,7 @@ export class ProductService {
     this.logger.debug({ productId, dto }, 'Product service :: update');
     const objectIdProductId = new Types.ObjectId(productId);
     try {
-      const product = await this.productModel.findById({
-        _id: objectIdProductId
-      });
+      const product = await this.productModel.findById(objectIdProductId);
 
       if (!product) {
         throw new NotFoundException(httpResponses.PRODUCT_NOT_EXISTS.message);
@@ -109,14 +107,11 @@ export class ProductService {
     }
   }
 
-  async remove(productId: string, email: string) {
-    this.logger.debug({ productId, email }, 'Product service :: remove');
+  async remove(productId: string) {
+    this.logger.debug({ productId }, 'Product service :: remove');
     const objectIdProductId = new Types.ObjectId(productId);
     try {
-      return await this.productModel.findOneAndDelete({
-        _id: objectIdProductId,
-        'supplier.email': email
-      });
+      return await this.productModel.findByIdAndDelete(objectIdProductId);
     } catch (error) {
       this.logger.error(error.message, 'Product service :: remove');
       throw error;
