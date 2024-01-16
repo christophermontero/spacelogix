@@ -6,8 +6,8 @@ import {
 } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Response } from 'express';
-import { OrderModel } from '../mockData/order.model.mock';
-import { ProductModel } from '../mockData/product.model.mock';
+import { OrderModel } from '../../test/mockData/order.model.mock';
+import { ProductModel } from '../../test/mockData/product.model.mock';
 import { Currency } from '../products/interface/product.interface';
 import { ProductService } from '../products/product.service';
 import { User, UserRole } from '../users/interface/user.interface';
@@ -114,7 +114,11 @@ describe('OrderController', () => {
         json: jest.fn().mockReturnThis()
       };
       try {
-        await orderController.remove(user as User, res as Response, orderId);
+        await orderController.create(
+          user as User,
+          res as Response,
+          dto as OrderDto
+        );
       } catch (error) {
         expect(error).toBeInstanceOf(ForbiddenException);
         expect(error.message).toBe(httpResponses.FORBIDDEN.message);
@@ -174,6 +178,23 @@ describe('OrderController', () => {
       );
       expect(result.status).toHaveBeenCalledWith(HttpStatus.OK);
     });
+
+    it('should throw an error when is fetching all orders for a customer', async () => {
+      const mockError = new Error('Fetching user error');
+      orderService.fetchAllByRole = jest.fn().mockRejectedValue(mockError);
+      const res: Partial<Response> = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn().mockReturnThis()
+      };
+      const result = await orderController.get(user as User, res as Response);
+      expect(orderService.fetchAllByRole).toHaveBeenCalledWith(
+        user.role,
+        user.email
+      );
+      expect(result.status).toHaveBeenCalledWith(
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    });
   });
 
   describe('getById', () => {
@@ -215,7 +236,7 @@ describe('OrderController', () => {
         res as Response,
         orderId
       );
-      expect(orderService.remove).toHaveBeenCalledWith(orderId, user.email);
+      expect(orderService.remove).toHaveBeenCalledWith(orderId);
       expect(result.status).toHaveBeenCalledWith(HttpStatus.OK);
     });
 

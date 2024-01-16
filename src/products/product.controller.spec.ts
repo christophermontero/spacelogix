@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Response } from 'express';
-import { ProductModel } from '../mockData/product.model.mock';
+import { ProductModel } from '../../test/mockData/product.model.mock';
 import { User, UserRole } from '../users/interface/user.interface';
 import httpResponses from '../utils/responses';
 import { EditProductDto, ProductDto } from './dto';
@@ -170,6 +170,20 @@ describe('ProductController', () => {
       expect(productService.fetchAllByRole).toHaveBeenCalledWith(user.email);
       expect(result.status).toHaveBeenCalledWith(HttpStatus.OK);
     });
+
+    it('should throw an error when is fetching all products for a supplier', async () => {
+      const mockError = new Error('Fetching products error');
+      productService.fetchAllByRole = jest.fn().mockRejectedValue(mockError);
+      const res: Partial<Response> = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn().mockReturnThis()
+      };
+      const result = await productController.get(user as User, res as Response);
+      expect(productService.fetchAllByRole).toHaveBeenCalledWith(user.email);
+      expect(result.status).toHaveBeenCalledWith(
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    });
   });
 
   describe('getById', () => {
@@ -214,7 +228,7 @@ describe('ProductController', () => {
         res as Response,
         productId
       );
-      expect(productService.remove).toHaveBeenCalledWith(productId, user.email);
+      expect(productService.remove).toHaveBeenCalledWith(productId);
       expect(result.status).toHaveBeenCalledWith(HttpStatus.OK);
     });
 

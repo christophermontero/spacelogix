@@ -9,6 +9,7 @@
   - [MongoDB document schemas](#mongoDB-document-schemas)
 - [Install guide](#install-guide)
   - [Containers](#containers)
+  - [Run tests](#run-tests)
 - [Comments](#comments)
 - [License](#license)
 - [Author](#author)
@@ -54,6 +55,7 @@ This API is composed for the following services:
 #### User
 
 - `GET /api/v1/users/me`
+- `PATCH /api/v1/users`
 
 #### Product
 
@@ -78,17 +80,17 @@ This object is a representation for product user:
 
 ```json
 {
-  "_id": "659b505abd8aa10100e284f1",
-  "name": "Supplier1",
+  "_id": "65a02b00d4c97df504ad5edc",
+  "name": "supplier1",
   "email": "supplier1@mailinator.com",
-  "hashedPassword": "$2b$10$BhYoC1vLmOtxeBWgp3sULuJVgodI9SMyqH6tLwpSFrq5bEwCQZ/TO",
+  "hashedPassword": "$2b$10$FRrxHESMToFtDj7USDR5Ke8Oletm7byHW5QcYDsHZBofeM44rIJpy",
   "phone": "98765432",
-  "address": "Fake St. 123",
-  "city": "Supplier1 City",
-  "country": "Supplier1 Country",
+  "address": "fake st. 123",
+  "city": "supplier1 city",
+  "country": "supplier1 country",
   "role": "supplier",
-  "createdAt": "2024-01-08T01:31:06.148Z",
-  "updatedAt": "2024-01-08T01:31:06.148Z",
+  "createdAt": "2024-01-11T17:53:04.311Z",
+  "updatedAt": "2024-01-11T17:53:04.311Z",
   "__v": 0
 }
 ```
@@ -99,22 +101,22 @@ This object is a representation for product schema:
 
 ```json
 {
-  "_id": "659b50aabd8aa10100e284fa",
-  "name": "Product 1",
-  "description": "Description 1",
+  "_id": "65a02b39d4c97df504ad5ee3",
+  "name": "product 1",
+  "description": "product description",
   "price": 1000,
   "currency": "usd",
-  "stock": 100,
+  "stock": 98,
   "supplier": {
-    "name": "Supplier1",
+    "name": "supplier1",
     "email": "supplier1@mailinator.com",
     "phone": "98765432",
-    "address": "Fake St. 123",
-    "city": "Supplier1 City",
-    "country": "Supplier1 Country"
+    "address": "fake st. 123",
+    "city": "supplier1 city",
+    "country": "supplier1 country"
   },
-  "createdAt": "2024-01-08T01:32:26.986Z",
-  "updatedAt": "2024-01-08T01:32:26.986Z",
+  "createdAt": "2024-01-11T17:54:01.797Z",
+  "updatedAt": "2024-01-11T17:55:16.065Z",
   "__v": 0
 }
 ```
@@ -125,23 +127,40 @@ This object is a representation of order schema:
 
 ```json
 {
-  "_id": "659b51a9bd8aa10100e28522",
-  "products": ["659b50aabd8aa10100e284fa", "659b50e1bd8aa10100e28502"],
+  "_id": "65a02b84d4c97df504ad5eee",
+  "products": [
+    {
+      "name": "product 1",
+      "description": "description",
+      "price": 1000,
+      "currency": "usd",
+      "quantity": 2,
+      "supplier": {
+        "name": "supplier1",
+        "email": "supplier1@mailinator.com",
+        "phone": "98765432",
+        "address": "fake st. 123",
+        "city": "supplier1 city",
+        "country": "supplier1 country"
+      },
+      "_id": "65a02b84d4c97df504ad5eef"
+    }
+  ],
   "customer": {
-    "name": "john doe",
-    "email": "johndoe@mailinator.com",
+    "name": "customer1",
+    "email": "customer1@mailinator.com",
     "phone": "98765432",
     "address": "fake st. 123",
-    "city": "john doe city",
-    "country": "john doe country"
+    "city": "customer1 city",
+    "country": "customer1 country"
   },
   "transporter": {
-    "name": "transporter6",
-    "email": "transporter6@mailinator.com",
+    "name": "transporter1",
+    "email": "transporter1@mailinator.com",
     "phone": "98765432",
     "address": "fake st. 123",
-    "city": "transporter6 city",
-    "country": "transporter6 country"
+    "city": "transporter1 city",
+    "country": "transporter1 country"
   },
   "payment": {
     "paymentMethod": "credit",
@@ -155,10 +174,10 @@ This object is a representation of order schema:
       "zipCode": "billing zip code"
     },
     "totalAmount": 200,
-    "currency": "cop"
+    "currency": "usd"
   },
-  "createdAt": "2024-01-08T01:36:41.939Z",
-  "updatedAt": "2024-01-08T01:36:41.939Z",
+  "createdAt": "2024-01-11T17:55:16.079Z",
+  "updatedAt": "2024-01-11T17:55:16.079Z",
   "__v": 0
 }
 ```
@@ -176,6 +195,14 @@ Make sure you have MongoDB running before start the project in development mode.
 
 ```bash
 yarn start:dev
+```
+
+### Run tests
+
+For run unit tests use the following command.
+
+```bash
+yarn test
 ```
 
 ### Containers

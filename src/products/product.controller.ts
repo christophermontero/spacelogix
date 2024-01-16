@@ -152,7 +152,7 @@ export class ProductController {
       throw new ForbiddenException(httpResponses.FORBIDDEN.message);
     }
     try {
-      const product = await this.productService.remove(productId, user.email);
+      const product = await this.productService.remove(productId);
 
       if (!product) {
         throw new NotFoundException(httpResponses.PRODUCT_NOT_EXISTS.message);

@@ -57,14 +57,11 @@ export class OrderService {
     }
   }
 
-  async remove(orderId: string, email: string) {
-    this.logger.debug({ orderId, email }, 'Order service :: remove');
+  async remove(orderId: string) {
+    this.logger.debug({ orderId }, 'Order service :: remove');
     const objectIdOrderId = new Types.ObjectId(orderId);
     try {
-      return await this.orderModel.findOneAndDelete({
-        _id: objectIdOrderId,
-        'customer.email': email
-      });
+      return await this.orderModel.findByIdAndDelete(objectIdOrderId);
     } catch (error) {
       this.logger.error(error.message, 'Order service :: remove');
       throw error;
