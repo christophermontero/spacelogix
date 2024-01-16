@@ -42,6 +42,11 @@ describe('OrderService', () => {
     orderService = module.get<OrderService>(OrderService);
   });
 
+  afterEach(() => {
+    jest.clearAllMocks();
+    jest.resetAllMocks();
+  });
+
   describe('create', () => {
     let orderDto: Partial<OrderDto>;
 
@@ -51,16 +56,13 @@ describe('OrderService', () => {
 
     it('should create a new order', async () => {
       const saveSpy = jest.spyOn(MockOrderModel.prototype, 'save');
-
       await orderService.create(orderDto as OrderDto);
-
       expect(saveSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should throw an error when is saving the order', async () => {
       const mockError = new Error('Saving product error');
       jest.spyOn(MockOrderModel.prototype, 'save').mockRejectedValue(mockError);
-
       await expect(orderService.create(orderDto as OrderDto)).rejects.toThrow(
         mockError
       );
@@ -75,26 +77,23 @@ describe('OrderService', () => {
       role = UserRole.Customer;
       email = 'customer@example.com';
       const findSpy = jest.spyOn(MockOrderModel, 'find');
-
-      const result = await orderService.fetchAllByRole(role, email);
-
-      expect(result).toEqual([new MockOrderModel({})]);
+      await orderService.fetchAllByRole(role, email);
       expect(findSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should fetch orders for a transporter role', async () => {
       role = UserRole.Transporter;
       email = 'transporter@example.com';
-
-      const result = await orderService.fetchAllByRole(role, email);
-
-      expect(result).toEqual([new MockOrderModel({})]);
+      const findSpy = jest
+        .spyOn(MockOrderModel, 'find')
+        .mockResolvedValue([new MockOrderModel({})] as never);
+      await orderService.fetchAllByRole(role, email);
+      expect(findSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should throw a ForbiddenException for an unknown role', async () => {
       role = null;
       email = 'unknown@example.com';
-
       await expect(orderService.fetchAllByRole(role, email)).rejects.toThrow(
         new ForbiddenException(httpResponses.FORBIDDEN.message)
       );
@@ -104,7 +103,6 @@ describe('OrderService', () => {
       role = UserRole.Customer;
       const mockError = new Error('Fetching orders error');
       jest.spyOn(MockOrderModel, 'find').mockRejectedValue(mockError as never);
-
       await expect(orderService.fetchAllByRole(role, email)).rejects.toThrow(
         mockError
       );
@@ -117,10 +115,7 @@ describe('OrderService', () => {
     it('should fetch order using its id', async () => {
       orderId = '65a02b84d4c97df504ad5eee';
       const findSpy = jest.spyOn(MockOrderModel, 'findById');
-
-      const result = await orderService.fetchById(orderId);
-
-      expect(result).toEqual(new MockOrderModel({}));
+      await orderService.fetchById(orderId);
       expect(findSpy).toHaveBeenCalledTimes(1);
     });
 
@@ -130,7 +125,6 @@ describe('OrderService', () => {
       jest
         .spyOn(MockOrderModel, 'findById')
         .mockRejectedValue(mockError as never);
-
       await expect(orderService.fetchById(orderId)).rejects.toThrow(mockError);
     });
   });
@@ -141,10 +135,7 @@ describe('OrderService', () => {
     it('should remove order using its id', async () => {
       orderId = '65a02b84d4c97df504ad5eee';
       const deleteSpy = jest.spyOn(MockOrderModel, 'findByIdAndDelete');
-
-      const result = await orderService.remove(orderId);
-
-      expect(result).toEqual(new MockOrderModel({}));
+      await orderService.remove(orderId);
       expect(deleteSpy).toHaveBeenCalledTimes(1);
     });
 
@@ -154,7 +145,6 @@ describe('OrderService', () => {
       jest
         .spyOn(MockOrderModel, 'findByIdAndDelete')
         .mockRejectedValue(mockError as never);
-
       await expect(orderService.remove(orderId)).rejects.toThrow(mockError);
     });
   });

@@ -46,7 +46,7 @@ export class OrderController {
     this.logger.debug(dto, 'Order controller :: create');
 
     if (user.role !== UserRole.Customer) {
-      throw new ForbiddenException();
+      throw new ForbiddenException(httpResponses.FORBIDDEN.message);
     }
     try {
       if (dto.products.length > 15) {

@@ -49,9 +49,7 @@ describe('UserService', () => {
 
     it('should update a user', async () => {
       const findSpy = jest.spyOn(MockUserModel, 'findByIdAndUpdate');
-
       await userService.update(userId, userDto as EditUserDto);
-
       expect(findSpy).toHaveBeenCalledTimes(1);
     });
 
@@ -60,7 +58,6 @@ describe('UserService', () => {
       jest
         .spyOn(MockUserModel, 'findByIdAndUpdate')
         .mockRejectedValue(mockError as never);
-
       await expect(
         userService.update(userId, userDto as EditUserDto)
       ).rejects.toThrow(mockError);
