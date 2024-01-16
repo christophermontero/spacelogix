@@ -3,21 +3,17 @@ name: pokeapi-pipeline
 on:
   push:
     branches:
-      - feature/*
       - develop
   pull_request:
     branches:
       - master
 
 jobs:
-  build:
+  tests:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
-      - name: Print variables names 📝
-        run: |
-          echo "JWT_ACCESS_EXPIRATION_SECONDS=${{ vars.JWT_ACCESS_EXPIRATION_SECONDS }}"
       - name: Set up Node.js 🚨
         uses: actions/setup-node@v3
         with:
