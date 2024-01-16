@@ -164,7 +164,7 @@ describe('AuthService', () => {
     });
 
     it('should throw an error when is starting session', async () => {
-      const mockError = new Error('Starting user error');
+      const mockError = new Error('Starting session error');
       jest
         .spyOn(MockUserModel, 'findOne')
         .mockRejectedValue(mockError as never);
@@ -184,7 +184,7 @@ describe('AuthService', () => {
     });
 
     it('should throw an error when is updating session', async () => {
-      const mockError = new Error('Updating user error');
+      const mockError = new Error('Updating session error');
       jest
         .spyOn(MockUserModel, 'findOneAndUpdate')
         .mockRejectedValue(mockError as never);

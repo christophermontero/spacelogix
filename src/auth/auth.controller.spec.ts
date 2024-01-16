@@ -12,8 +12,6 @@ import { SigninDto, SignupDto } from './dto';
 describe('AuthController', () => {
   let authController: AuthController;
   let authService: AuthService;
-  let jwtService: JwtService;
-  let configService: ConfigService;
   let user: Partial<User>;
   let dto: Partial<SignupDto | SigninDto>;
   let accessToken: string;
@@ -33,8 +31,6 @@ describe('AuthController', () => {
     }).compile();
     authController = module.get<AuthController>(AuthController);
     authService = module.get<AuthService>(AuthService);
-    jwtService = module.get<JwtService>(JwtService);
-    configService = module.get<ConfigService>(ConfigService);
     user = { email: 'johndoe@mailinator.com' };
     dto = {
       name: 'John Doe',
@@ -63,6 +59,23 @@ describe('AuthController', () => {
       expect(authService.signup).toHaveBeenCalledWith(dto);
       expect(result.status).toHaveBeenCalledWith(HttpStatus.CREATED);
     });
+
+    it('should throw an error when is creating a new user', async () => {
+      const mockError = new Error('Creating user error');
+      authService.signup = jest.fn().mockRejectedValue(mockError);
+      const res: Partial<Response> = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn().mockReturnThis()
+      };
+      const result = await authController.signup(
+        res as Response,
+        dto as SignupDto
+      );
+      expect(authService.signup).toHaveBeenCalledWith(dto);
+      expect(result.status).toHaveBeenCalledWith(
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    });
   });
 
   describe('signin', () => {
@@ -79,6 +92,23 @@ describe('AuthController', () => {
       expect(authService.signin).toHaveBeenCalledWith(dto);
       expect(result.status).toHaveBeenCalledWith(HttpStatus.OK);
     });
+
+    it('should throw an error when is starting session', async () => {
+      const mockError = new Error('Starting session error');
+      authService.signin = jest.fn().mockRejectedValue(mockError);
+      const res: Partial<Response> = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn().mockReturnThis()
+      };
+      const result = await authController.signin(
+        res as Response,
+        dto as SigninDto
+      );
+      expect(authService.signin).toHaveBeenCalledWith(dto);
+      expect(result.status).toHaveBeenCalledWith(
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    });
   });
 
   describe('signout', () => {
@@ -92,8 +122,25 @@ describe('AuthController', () => {
         user as User,
         res as Response
       );
-      expect(authService.signout).toHaveBeenCalled();
+      expect(authService.signout).toHaveBeenCalledWith(user.email);
       expect(result.status).toHaveBeenCalledWith(HttpStatus.OK);
+    });
+
+    it('should throw an error when is updating session', async () => {
+      const mockError = new Error('Updating session error');
+      authService.signout = jest.fn().mockRejectedValue(mockError);
+      const res: Partial<Response> = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn().mockReturnThis()
+      };
+      const result = await authController.signout(
+        user as User,
+        res as Response
+      );
+      expect(authService.signout).toHaveBeenCalledWith(user.email);
+      expect(result.status).toHaveBeenCalledWith(
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
     });
   });
 });
