@@ -9,6 +9,7 @@
   - [MongoDB document schemas](#mongoDB-document-schemas)
 - [Install guide](#install-guide)
   - [Containers](#containers)
+  - [Run tests](#run-tests)
 - [Comments](#comments)
 - [License](#license)
 - [Author](#author)
@@ -194,6 +195,14 @@ Make sure you have MongoDB running before start the project in development mode.
 
 ```bash
 yarn start:dev
+```
+
+### Run tests
+
+For run unit tests use the following command.
+
+```bash
+yarn test
 ```
 
 ### Containers
