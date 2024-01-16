@@ -18,8 +18,6 @@ jobs:
       - name: Print variables names 📝
         run: |
           echo "JWT_ACCESS_EXPIRATION_SECONDS=${{ vars.JWT_ACCESS_EXPIRATION_SECONDS }}"
-          echo "JWT_ALGORITHM=${{ vars.JWT_ALGORITHM }}"
-          echo "JWT_ISSUER=${{ vars.JWT_ISSUER }}"
       - name: Set up Node.js 🚨
         uses: actions/setup-node@v3
         with:

@@ -45,29 +45,40 @@ export class AuthService {
   }
 
   async signin(dto: SigninDto) {
-    const user = await this.userModel.findOne({ email: dto.email });
+    try {
+      const user = await this.userModel.findOne({ email: dto.email });
 
-    if (!user) {
-      throw new NotFoundException(httpResponses.USER_NOT_EXISTS.message);
+      if (!user) {
+        throw new NotFoundException(httpResponses.USER_NOT_EXISTS.message);
+      }
+
+      const hashedPassword = _.get(user, 'hashedPassword', '');
+      const isPasswordValid = await bcrypt.compare(
+        dto.password,
+        hashedPassword
+      );
+
+      if (!isPasswordValid) {
+        throw new UnauthorizedException(httpResponses.INVALID_PASSWORD.message);
+      }
+      return this.signToken(user.id, user.email, user.role);
+    } catch (error) {
+      throw error;
     }
-
-    const hashedPassword = _.get(user, 'hashedPassword', '');
-    const isPasswordValid = await bcrypt.compare(dto.password, hashedPassword);
-
-    if (!isPasswordValid) {
-      throw new UnauthorizedException(httpResponses.INVALID_PASSWORD.message);
-    }
-    return this.signToken(user.id, user.email, user.role);
   }
 
   async signout(email: string) {
-    return await this.userModel.findOneAndUpdate(
-      { email },
-      {
-        updatedAt: new Date()
-      },
-      { new: true }
-    );
+    try {
+      return await this.userModel.findOneAndUpdate(
+        { email },
+        {
+          updatedAt: new Date()
+        },
+        { new: true }
+      );
+    } catch (error) {
+      throw error;
+    }
   }
 
   private async signToken(userId: number, email: string, role: UserRole) {
