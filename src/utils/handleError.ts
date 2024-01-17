@@ -3,6 +3,7 @@ import {
   ForbiddenException,
   HttpStatus,
   NotFoundException,
+  UnauthorizedException,
   UnprocessableEntityException
 } from '@nestjs/common';
 import { Response } from 'express';
@@ -81,6 +82,12 @@ const handleError = (res: Response, err: Error) => {
       res,
       HttpStatus.FORBIDDEN,
       httpResponses.FORBIDDEN
+    );
+  } else if (err instanceof UnauthorizedException) {
+    response = buildResponse(
+      res,
+      HttpStatus.UNAUTHORIZED,
+      httpResponses.INVALID_PASSWORD
     );
   } else {
     response = buildResponse(
