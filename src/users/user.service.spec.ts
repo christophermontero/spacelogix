@@ -38,7 +38,6 @@ describe('UserService', () => {
     beforeAll(() => {
       userId = '65a02b84d4c97df504ad5eee';
       userDto = {
-        email: 'newsupplier@mailinator.com',
         name: 'new supplier',
         phone: '98765432',
         country: 'new supplier country',
