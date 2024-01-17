@@ -52,7 +52,7 @@ describe('UserController', () => {
 
     beforeAll(() => {
       dto = {
-        email: 'johndoe@mailinator.com'
+        name: 'new name'
       };
       userId = 'userId';
     });
