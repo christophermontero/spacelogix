@@ -47,7 +47,6 @@ export class AuthController {
     this.logger.debug(protectedDto, 'Auth controller :: signin');
     try {
       const accessToken = await this.authService.signin(dto);
-
       return res
         .status(HttpStatus.OK)
         .json(buildPayloadResponse(httpResponses.OK, accessToken));

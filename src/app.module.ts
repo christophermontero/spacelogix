@@ -15,7 +15,7 @@ import { UserModule } from './users/user.module';
     UserModule,
     ProductModule,
     OrderModule,
-    MongooseModule.forRoot('mongodb://localhost:27017/spacelogixdb', {
+    MongooseModule.forRoot('mongodb://localhost:27017/spacelogixtestdb', {
       retryWrites: true,
       w: 'majority'
     })
