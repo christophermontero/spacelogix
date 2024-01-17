@@ -205,6 +205,12 @@ For run unit tests use the following command.
 yarn test
 ```
 
+And for end to end tests, ensure have database running, then use the following commnad.
+
+```bash
+yarn test:e2e
+```
+
 ### Containers
 
 This project supports Docker. To use the API with containers, follow these steps:
