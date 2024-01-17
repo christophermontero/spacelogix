@@ -37,12 +37,13 @@ export class UserController {
 
   @Patch()
   async update(
-    @GetUser('sub') userId: string,
+    @GetUser('_id') userId: string,
     @Res() res: Response,
     @Body() dto: EditUserDto
   ) {
     this.logger.debug(dto, 'User controller :: update');
     try {
+      console.log('UserId', userId);
       const updateUser = await this.userService.update(userId, dto);
       return res
         .status(HttpStatus.OK)

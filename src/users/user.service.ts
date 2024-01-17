@@ -19,10 +19,10 @@ export class UserService {
         objectIdUserId,
         {
           ...(dto.name && { name: dto.name }),
-          ...(dto.phone && { name: dto.phone }),
-          ...(dto.country && { name: dto.country }),
-          ...(dto.city && { name: dto.city }),
-          ...(dto.address && { name: dto.address })
+          ...(dto.phone && { phone: dto.phone }),
+          ...(dto.country && { country: dto.country }),
+          ...(dto.city && { city: dto.city }),
+          ...(dto.address && { address: dto.address })
         },
         { new: true }
       );
