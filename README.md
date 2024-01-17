@@ -205,7 +205,7 @@ For run unit tests use the following command.
 yarn test
 ```
 
-And for end to end tests, ensure have database running, then use the following commnad.
+And for end to end tests, ensure have database running, then use the following command.
 
 ```bash
 yarn test:e2e
