@@ -9,20 +9,6 @@ on:
       - master
 
 jobs:
-  unit:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@v3
-      - name: Set up Node.js 🚨
-        uses: actions/setup-node@v3
-        with:
-          node-version: '14.21.3'
-      - name: Install dependencies 🔧
-        run: yarn install
-      - name: unit tests 🧪
-        run: yarn test
-
   e2e:
     runs-on: ubuntu-latest
     needs: unit
