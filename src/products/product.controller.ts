@@ -54,11 +54,11 @@ export class ProductController {
         }
       };
       const product = await this.productService.create(dto);
-      return res
-        .status(HttpStatus.CREATED)
-        .json(
-          buildPayloadResponse(httpResponses.CREATED, { produId: product._id })
-        );
+      return res.status(HttpStatus.CREATED).json(
+        buildPayloadResponse(httpResponses.CREATED, {
+          productId: product._id
+        })
+      );
     } catch (error) {
       this.logger.error(error.message, 'Product controller :: create');
       return handleError(res, error);

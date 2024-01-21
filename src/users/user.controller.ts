@@ -43,7 +43,6 @@ export class UserController {
   ) {
     this.logger.debug(dto, 'User controller :: update');
     try {
-      console.log('UserId', userId);
       const updateUser = await this.userService.update(userId, dto);
       return res
         .status(HttpStatus.OK)
